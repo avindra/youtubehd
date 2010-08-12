@@ -5,7 +5,7 @@
 // @include       http://youtube.com/watch*
 // @namespace     #aVg
 // @license       CC-BY-NC-ND http://creativecommons.org/licenses/by-nc-nd/3.0/
-// @version       1.1.9
+// @version       1.2.0
 // ==/UserScript==
 // Do not fiddle with the script for any reason! If you're having problems, use the various contact options!
 // This entire script is licensed under the license listed above. If you want to add a feature to it,
@@ -31,9 +31,8 @@ function Params(A) {
 	}
 	return obj;
 };
-unsafeWindow.Params = Params;
 function $(A) {return document.getElementById(A);}
-const thisVer="1.1.9";
+const thisVer="1.2.0";
 function script() {
 function refresh() {
 	var pos = window.scrollY;
@@ -631,7 +630,7 @@ if ($("watch-headline-title")) {
 	try {
 		script();
 	} catch(e) {
-		alert("Error! Please let me know about it (http://userscripts.org/scripts/show/31864):\n" + e);
+		alert("Error! Please let me know about it (http://userscripts.org/scripts/show/31864):\n\n" + e);
 	}
 } else {
 	$("content").addEventListener("DOMNodeInserted", listener, false);
