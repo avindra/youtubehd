@@ -356,7 +356,10 @@ $("masthead-nav").appendChild(toggler=new Element("a", {
 	}
 }));
 if (!opts.bigMode && (opts.fit || opts.true720p)) opts.bigMode = true;
-head.addEventListener("click", function() {this.scrollIntoView(true)}, false);
+head.addEventListener("click", function() {
+	this.scrollIntoView(true);
+	refresh();
+}, false);
 if (opts.jumpToPlayer) head.scrollIntoView(true);
 unsafeWindow.stateChanged=function(state) {
 	if (state==0) {
