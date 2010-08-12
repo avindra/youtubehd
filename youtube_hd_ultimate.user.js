@@ -114,9 +114,9 @@ function center() {
 	else {
 		player.style.marginLeft = "0px";
 		var amt = -2 * (player.offsetLeft + player.parentNode.offsetLeft);
-		if(psize >= 855) {
+		if (psize >= 855) {
 			amt += (psize - player.parentNode.offsetWidth);
-			if(psize >= 908) amt -= psize - 907;
+			if (psize >= 908) amt -= psize - 907;
 		}
 		player.style.marginLeft = amt + "px";
 	}
@@ -129,9 +129,9 @@ function fitToWindow() {
 function fitBig(force) {
 	var already = (typeof force=="boolean") ? force : !unsafeWindow._hasclass($("baseDiv"), "watch-wide-mode");
 	unsafeWindow.yt.www.watch.player.enableWideScreen(already, true);
-	if (already) {
+	if (already)
 		player.parentNode.style.height = player.style.height = (window.innerHeight - 150) + "px";
-	} else {
+	else {
 		player.style.marginLeft="0";
 		player.style.width = "640px";
 		player.style.height = "385px";
@@ -362,12 +362,11 @@ head.addEventListener("click", function() {
 }, false);
 if (opts.jumpToPlayer) head.scrollIntoView(true);
 unsafeWindow.stateChanged=function(state) {
-	if (state==0) {
-		if (config.SWF_IS_PLAYING_ALL) unsafeWindow.gotoNext();
-		else if (opts.loop) {
-			player.seekTo(0, true);
-			player.playVideo();
-		}
+	if (state!=0) return;
+	if (config.SWF_IS_PLAYING_ALL) unsafeWindow.gotoNext();
+	else if (opts.loop) {
+		player.seekTo(0, true);
+		player.playVideo();
 	}
 };
 unsafeWindow.onYouTubePlayerReady=function(A) {
@@ -392,7 +391,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		return;
 	}
 	globals.height = player.style.height;
-	player.addEventListener("onStateChange","stateChanged");
+	player.addEventListener("onStateChange", "stateChanged");
 	if (opts.snapBack) {
 		unsafeWindow.newFmt=function(fmt) {
 			var isBig = /hd(?:72|108)0|large/.test(fmt);
@@ -404,7 +403,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 				}
 			} else unsafeWindow.onresize = null;
 		};
-		player.addEventListener("onPlaybackQualityChange","newFmt");
+		player.addEventListener("onPlaybackQualityChange", "newFmt");
 	}
 	if (unsafeWindow.toggleLights && opts.autoCinema) unsafeWindow.toggleLights(true);
 	player.focus();
@@ -437,13 +436,13 @@ for (var i=ads.length-1;i>=0;i--)
 	swfArgs.cc_font = "Arial Unicode MS, arial, verdana, _sans";
 */
 swfArgs.vq=["hd1080", "hd720", "large", "medium", "small"][opts.vq];
-if (swfArgs.fmt_map.indexOf("18")==0 && /3[457]|22/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/,"");
+if (swfArgs.fmt_map.indexOf("18")==0 && /3[457]|22/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/, "");
 else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|3[457])\//.test(swfArgs.fmt_map)) {
 	swfArgs.fmt_list = "18/" + (RegExp.$1=="0" ? "512000" : "640x360") + "/9/0/115," + swfArgs.fmt_list;
 	swfArgs.fmt_map = swfArgs.fmt_list;
 	if (swfArgs.fmt_stream_map.split(",").length == 1) {
 		// 240p default, 360p secret
-		if(location.search.indexOf("fmt=18")==-1) {
+		if (location.search.indexOf("fmt=18")==-1) {
 			location.replace(location.protocol + "//" + location.host +location.pathname + location.search + "&fmt=18" + location.hash);
 			return;
 		}
