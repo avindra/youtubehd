@@ -110,7 +110,12 @@ function Element(A, B, C, D) {
 function center() {
 	var psize = Number(player.style.width.replace(/ ?px/, ""));
 	var mgn = Math.round(player.parentNode.offsetWidth / 2 - psize / 2);
-	if (psize > player.parentNode.offsetWidth) player.style.marginLeft = mgn + "px";
+	if (psize > player.parentNode.offsetWidth)
+		player.style.marginLeft = mgn + "px";
+	else {
+		player.style.marginLeft = "0px";
+		player.style.marginLeft = "-" + (2 * (player.offsetLeft + player.parentNode.offsetLeft)) + "px";
+	}
 }
 function fitToWindow() {
 	player.setAttribute("style", "width:" + document.body.offsetWidth + "px!important;");
@@ -275,8 +280,7 @@ optionBox.appendChild(new Element("a", {
 	onclick : function(E) {
 		E.preventDefault();
 		toggler.textContent="Show Ultimate Options";
-		var newOpt;
-		for(var i=newOpts.length-1; i>=0; --i) {
+		for(var newOpt, i=newOpts.length-1; i>=0; --i) {
 			newOpt=newOpts[i];
 			var val;
 			if (newOpt.nodeName=="SELECT") val = newOpt.selectedIndex;
@@ -344,15 +348,10 @@ $("masthead-nav").appendChild(toggler=new Element("a", {
 	textContent : "Show Ultimate Options",
 	onclick : function(E) {
 		E.preventDefault();
-		if (optionBox.style.display=="none") {
-			this.textContent="Hide Ultimate Options";
-			optionBox.style.display="inline";
-			refresh();
-		} else {
-			this.textContent="Show Ultimate Options";
-			optionBox.style.display="none";
-			refresh();
-		}
+		var isHidden = optionBox.style.display=="none";
+		this.textContent= (isHidden ? "Hide" : "Show") + " Ultimate Options";
+		optionBox.style.display=isHidden ? "inline" : "none";
+		refresh();
 	}
 }));
 if (!opts.bigMode && (opts.fit || opts.true720p)) opts.bigMode = true;
