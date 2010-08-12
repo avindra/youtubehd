@@ -14,13 +14,13 @@ function Params(A) {
 	var obj = {}, isProp = true, cur, curProp = "", curValue = "";
 	for(var i = 0; i < A.length; ++i) {
 		cur = A.charAt(i);
-		if(isProp) {
-			if(cur=="=") {
+		if (isProp) {
+			if (cur=="=") {
 				isProp = false;
 				continue;
 			} else curProp += cur;
 		} else {
-			if(cur=="&") {
+			if (cur=="&") {
 				obj[curProp] = decodeURIComponent(curValue).replace(/\+/g, " ");
 				curValue = "";
 				curProp = "";
@@ -45,10 +45,10 @@ function update(resp) {
 		url : "http://userscripts.org/scripts/source/31864.user.js?",
 		method : "GET",
 		onload : function(A) {
-			if(A.responseText.match(/\/\/ @version       (\S+)/) == null) return;
+			if (A.responseText.match(/\/\/ @version       (\S+)/) == null) return;
 			if (RegExp.$1 != thisVer) {
-				if(confirm("There is a new version of YouTube HD Ultimate.\n\nInstall it?")) location.href = "http://userscripts.org/scripts/source/31864.user.js";
-			} else if(resp) alert("There is no new version at this time.");
+				if (confirm("There is a new version of YouTube HD Ultimate.\n\nInstall it?")) location.href = "http://userscripts.org/scripts/source/31864.user.js";
+			} else if (resp) alert("There is no new version at this time.");
 		}
 	});
 }
@@ -57,7 +57,7 @@ if ((GM_getValue("lastCheck"), now) <= (now - 86400000)) {
 	GM_setValue("lastCheck", now);
 	update(false);
 }
-function ifdo(A, B) {if(A) B(A)}
+function ifdo(A, B) {if (A) B(A)}
 var player=unsafeWindow.document.getElementById("movie_player"),
 	config = unsafeWindow.yt.config_, swfArgs = new Params(player.getAttribute("flashvars")),
 	optionBox,
@@ -66,7 +66,7 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 	head=$("watch-headline-title"),
 	newOpts = new Array();
 document.title = document.title.substring(10);
-var opts  = {
+var opts = {
 	vq : new Array("Max Quality", ["240p", "360p", "480p", "720p", "1080p"], "Please choose the maximum video quality your computer can handle"),
 	player : new Array("Player", ["v8", "v9as2", "Latest"], "Choose which player you prefer using."),
 	autoplay : new Array("Autoplay", true, "By default, YouTube autoplays all of it's videos."),
@@ -97,20 +97,20 @@ player.style.__defineSetter__("width", function(x) {
 });
 function Element(A, B, C, D) {
 	A = document.createElement(A);
-	if(B) for(var b in B) {
+	if (B) for(var b in B) {
 		var cur=B[b];
-		if(b.indexOf("on")==0)try{A.addEventListener(b.substring(2), cur, false);}catch(e){alert([b.substring(2), cur])}
-		else if(b=="style") A.setAttribute("style", B[b]);
+		if (b.indexOf("on")==0)try{A.addEventListener(b.substring(2), cur, false);}catch(e){alert([b.substring(2), cur])}
+		else if (b=="style") A.setAttribute("style", B[b]);
 		else A[b]=B[b];
 	}
-	if(D) for(var d in D) A.setAttribute(d, D[d]);
-	if(C) for each(var c in C) A.appendChild(c);
+	if (D) for(var d in D) A.setAttribute(d, D[d]);
+	if (C) for each(var c in C) A.appendChild(c);
 	return A;
 }
 function center() {
 	var psize = Number(player.style.width.replace(/ ?px/, ""));
 	var mgn = Math.round(player.parentNode.offsetWidth / 2 - psize / 2);
-	if(psize > player.parentNode.offsetWidth) player.style.marginLeft = mgn + "px";
+	if (psize > player.parentNode.offsetWidth) player.style.marginLeft = mgn + "px";
 }
 function fitToWindow() {
 	player.setAttribute("style", "width:" + document.body.offsetWidth + "px!important;");
@@ -120,7 +120,7 @@ function fitToWindow() {
 function fitBig(force) {
 	var already = (typeof force=="boolean") ? force : !unsafeWindow._hasclass($("baseDiv"), "watch-wide-mode");
 	unsafeWindow.yt.www.watch.player.enableWideScreen(already, true);
-	if(already) {
+	if (already) {
 		player.parentNode.style.height = player.style.height = (window.innerHeight - 150) + "px";
 	} else {
 		player.style.marginLeft="0";
@@ -135,7 +135,7 @@ function fitBig(force) {
 	player.style.width = w + "px";
 	center();
 }
-// if(player.PercentLoaded()!=100) player.src += "";
+// if (player.PercentLoaded()!=100) player.src += "";
 GM_addStyle("#vidtools > * {\
 	position : relative;\
 	z-index : 6 !important;\
@@ -228,8 +228,8 @@ optionBox = new Element("div", {
 });
 for(var opt in opts) {
 	var val = GM_getValue(opt), full = opts[opt][1], a, s=document.createElement("label"), append = true;
-	if(val == null) {
-		if(typeof full == "object") val = 0;
+	if (val == null) {
+		if (typeof full == "object") val = 0;
 		else val = full;
 	}
 	switch(typeof val) {
@@ -242,7 +242,7 @@ for(var opt in opts) {
 		a.type = "checkbox";
 		a.addEventListener("click", function() {this.parentNode.className = this.checked ? "on" : "";}, false);
 		a.checked = val;
-		if(val) s.className = "on";
+		if (val) s.className = "on";
 		s.appendChild(a);
 		s.appendChild(document.createTextNode(opts[opt][0]));
 		append = false;
@@ -260,7 +260,7 @@ for(var opt in opts) {
 	optionBox.addEventListener("keydown", refresh, false);
 	a.addEventListener("click", refresh, false);
 	a.name = opt;
-	if(append) {
+	if (append) {
 		s.appendChild(document.createTextNode(opts[opt][0]));
 		s.appendChild(a);
 	}
@@ -279,7 +279,7 @@ optionBox.appendChild(new Element("a", {
 		for(var i=newOpts.length-1; i>=0; --i) {
 			newOpt=newOpts[i];
 			var val;
-			if(newOpt.nodeName=="SELECT") val = newOpt.selectedIndex;
+			if (newOpt.nodeName=="SELECT") val = newOpt.selectedIndex;
 			else val = newOpt[newOpt.type=="text" ? "value" : "checked"];
 			GM_setValue(newOpt.name, val);
 		}
@@ -331,7 +331,7 @@ linkbox.appendChild(new Element("a", {
 	title : "This is for easing development. Don't worry about it unless Avindra tells you to use it.",
 	onclick : function(E) {
 		E.preventDefault();
-		for(var arg in swfArgs) if(arg.indexOf("rv")==0) delete swfArgs[arg];
+		for(var arg in swfArgs) if (arg.indexOf("rv")==0) delete swfArgs[arg];
 		opts.swfArgs = swfArgs;
 		opts.ver = thisVer;
 		opts.ua = navigator.userAgent;
@@ -344,7 +344,7 @@ $("masthead-nav").appendChild(toggler=new Element("a", {
 	textContent : "Show Ultimate Options",
 	onclick : function(E) {
 		E.preventDefault();
-		if(optionBox.style.display=="none") {
+		if (optionBox.style.display=="none") {
 			this.textContent="Hide Ultimate Options";
 			optionBox.style.display="inline";
 			refresh();
@@ -355,13 +355,13 @@ $("masthead-nav").appendChild(toggler=new Element("a", {
 		}
 	}
 }));
-if(!opts.bigMode && (opts.fit || opts.true720p)) opts.bigMode = true;
+if (!opts.bigMode && (opts.fit || opts.true720p)) opts.bigMode = true;
 head.addEventListener("click", function() {this.scrollIntoView(true)}, false);
-if(opts.jumpToPlayer) head.scrollIntoView(true);
+if (opts.jumpToPlayer) head.scrollIntoView(true);
 unsafeWindow.stateChanged=function(state) {
 	if (state==0) {
 		if (config.SWF_IS_PLAYING_ALL) unsafeWindow.gotoNext();
-		else if(opts.loop) {
+		else if (opts.loop) {
 			player.seekTo(0, true);
 			player.playVideo();
 		}
@@ -369,33 +369,33 @@ unsafeWindow.stateChanged=function(state) {
 };
 unsafeWindow.onYouTubePlayerReady=function(A) {
 	player.setPlaybackQuality(["hd1080", "hd720", "large", "medium", "small"][opts.vq]);
-	if(opts.bigMode) fitBig(true);
-	if(opts.min) {
+	if (opts.bigMode) fitBig(true);
+	if (opts.min) {
 		fitToWindow();
 		player.style.height = "25px";
-	} else if(opts.fit) {
+	} else if (opts.fit) {
 		setTimeout(fitToWindow, 500);
 		unsafeWindow.onresize = fitToWindow;
-	} else if(opts.true720p && config.IS_HD_AVAILABLE) {
+	} else if (opts.true720p && config.IS_HD_AVAILABLE) {
 		player.style.width="1280px";
 		player.style.height="745px";
 		player.style.marginLeft="-160px";
 	}
 	if (opts.useVol && opts.vol.match(/(\d+)/)) player.setVolume(Number(RegExp.$1))
-	if(opts.autobuffer) player.pauseVideo();
+	if (opts.autobuffer) player.pauseVideo();
 	if (player.getAttribute("wmode")!="transparent") return;
-	if(!player.isMuted) {
+	if (!player.isMuted) {
 		player.data += "";
 		return;
 	}
 	globals.height = player.style.height;
 	player.addEventListener("onStateChange","stateChanged");
-	if(opts.snapBack) {
+	if (opts.snapBack) {
 		unsafeWindow.newFmt=function(fmt) {
 			var isBig = /hd(?:72|108)0|large/.test(fmt);
 			fitBig(isBig);
-			if(isBig) {
-				if(opts.fit) {
+			if (isBig) {
+				if (opts.fit) {
 					unsafeWindow.onresize = fitToWindow;
 					fitToWindow();
 				}
@@ -405,27 +405,27 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		};
 		player.addEventListener("onPlaybackQualityChange","newFmt");
 	}
-	if(unsafeWindow.toggleLights && opts.autoCinema) unsafeWindow.toggleLights(true);
+	if (unsafeWindow.toggleLights && opts.autoCinema) unsafeWindow.toggleLights(true);
 	player.focus();
 };
-if(opts.usecolor) {
+if (opts.usecolor) {
 	swfArgs.color1=opts.c1;
 	swfArgs.color2=opts.c2;
 }
-if(opts.hidenotes) swfArgs.iv_load_policy="3";
-if(config.SWF_IS_PLAYING_ALL) swfArgs.playnext = "1";
-if(!opts.autoplay && !opts.autobuffer)
+if (opts.hidenotes) swfArgs.iv_load_policy="3";
+if (config.SWF_IS_PLAYING_ALL) swfArgs.playnext = "1";
+if (!opts.autoplay && !opts.autobuffer)
 	swfArgs.autoplay="0";
-else if(opts.autoplay) swfArgs.autoplay="1";
-if(location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s)?(\d*)/)) {
+else if (opts.autoplay) swfArgs.autoplay="1";
+if (location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s)?(\d*)/)) {
 	var start=0;
-	if(RegExp.$1) start += Number(RegExp.$1) * 60;
-	if(RegExp.$2) start += Number(RegExp.$2);
-	if(RegExp.$3) start += Number(RegExp.$3);
+	if (RegExp.$1) start += Number(RegExp.$1) * 60;
+	if (RegExp.$2) start += Number(RegExp.$2);
+	if (RegExp.$3) start += Number(RegExp.$3);
 	swfArgs.start = start;
 }
 var ads=new Array("infringe", "invideo", "ctb", "interstitial", "watermark");
-if(opts.hideRate) {
+if (opts.hideRate) {
 	ads.push("ratings");
 	ads.push("ratings_module");
 }
@@ -436,14 +436,14 @@ for(var i=ads.length-1;i>=0;i--)
 	swfArgs.cc_font = "Arial Unicode MS, arial, verdana, _sans";
 */
 swfArgs.vq=["hd1080", "hd720", "large", "medium", "small"][opts.vq];
-if(swfArgs.fmt_map.indexOf("18")==0 && /3[45]/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/,"");
-if(/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22)\//.test(swfArgs.fmt_map)) {
-	if(RegExp.$1=="0")
+if (swfArgs.fmt_map.indexOf("18")==0 && /3[45]/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/,"");
+if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22)\//.test(swfArgs.fmt_map)) {
+	if (RegExp.$1=="0")
 		swfArgs.fmt_list = "18/512000/9/0/115," + swfArgs.fmt_list;
 	else
 		swfArgs.fmt_list = "18/640x360/9/0/115," + swfArgs.fmt_list;
 	swfArgs.fmt_map = swfArgs.fmt_list;
-	if(swfArgs.fmt_stream_map.split(",").length == 1) {
+	if (swfArgs.fmt_stream_map.split(",").length == 1) {
 		swfArgs.fmt_stream_map = swfArgs.fmt_stream_map.replace(/v21\.(ls)?cache4/g, "v7.$1cache3").replace(/itag=\d+/, "itag=18").replace(/5\|/, "18|") + "," + swfArgs.fmt_stream_map;
 	}
 	else {
@@ -453,7 +453,7 @@ if(/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22)\//.test(swfArg
 }
 console.log(swfArgs);
 var vars="";
-for(var arg in swfArgs) if(!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
+for(var arg in swfArgs) if (!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
 player.setAttribute("flashvars", vars);
 player.setAttribute("wmode", "transparent");
 switch(opts.player) {
@@ -463,7 +463,7 @@ switch(opts.player) {
 }
 head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
 document.addEventListener("keydown", function(E) {
-	if("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
+	if ("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
 	switch(E.keyCode) {
 		case 83: player.style.height = "25px"; return;
 		case 80: player[(player.getPlayerState()==1 ? "pause" : "play") + "Video"](); return;
@@ -475,7 +475,7 @@ document.addEventListener("keydown", function(E) {
 		case 37: player.seekTo(Math.round(player.getCurrentTime()-1), true);return;
 		return;
 	}
-	if(E.ctrlKey)
+	if (E.ctrlKey)
 		switch(E.keyCode) {
 			case 38:
 				E.preventDefault();
@@ -500,8 +500,8 @@ function toggle() {
 		document.body.className += " watch-lights-off";
 	}
 }
-if(!unsafeWindow.toggleLights) {
-	if(opts.autoCinema) document.body.className += " watch-lights-off";
+if (!unsafeWindow.toggleLights) {
+	if (opts.autoCinema) document.body.className += " watch-lights-off";
 	document.body.appendChild(shade=new Element("div", {onclick : toggle, id : "watch-longform-shade", style : "height : "+(window.innerHeight + window.scrollMaxY) + "px; display : " + (opts.autoCinema ? "" : "none")}));
 	head.appendChild(tog=new Element("span", {
 			id : "light-switch",
@@ -520,10 +520,10 @@ head.appendChild(new Element("span", {
 head.appendChild(new Element("a", {
 	style : "font-size:12px;padding-top:3px;padding-left:3px;",
 	onclick : function() {
-		if(this.textContent=="mini mode on")
+		if (this.textContent=="mini mode on")
 		{
 			this.textContent = "mini mode off";
-			if(opts.fit) {
+			if (opts.fit) {
 				unsafeWindow.onresize = fitToWindow;
 				fitToWindow();
 			} else player.style.height = globals.height;
@@ -540,7 +540,7 @@ var watch=$("watch-actions");
 $("watch-actions-right").appendChild(
 	new Element("button", {
 		className : "yt-uix-button yt-uix-tooltip",
-		onclick  : function(E) {
+		onclick : function(E) {
 		//	E.preventDefault();
 		}
 	}, [
@@ -568,9 +568,9 @@ var actions = {
 			var ct = player.getCurrentTime();
 			var m = Math.floor( ct / 60), s = Math.round(ct - m * 60);
 			time = "#t=";
-			if(m > 0) time += m + "m";
-			if(s > 0) time += s + "s";
-			prompt("Here is your custom made link for highest quality:", "http://www.youtube.com/watch" + location.search.replace(/[?&]fmt=\d*/,"") + "&fmt=" + (config.IS_HD_AVAILABLE ? "22" : "18") + time);	
+			if (m > 0) time += m + "m";
+			if (s > 0) time += s + "s";
+			prompt("Here is your custom made link for highest quality:", "http://www.youtube.com/watch" + location.search.replace(/[?&]fmt=\d*/,"") + "&fmt=" + (config.IS_HD_AVAILABLE ? "22" : "18") + time);
 	}
 };
 unsafeWindow.actions = actions;
@@ -584,14 +584,14 @@ for(var action in actions) {
 		onclick : "actions[\"" + action + "\"]()"
 	})]));
 }
-if(opts.utterBlack) GM_addStyle("#watch-longform-shade, .watch-lights-off {background : black !important;}");
+if (opts.utterBlack) GM_addStyle("#watch-longform-shade, .watch-lights-off {background : black !important;}");
 
 var downloads={"3gp":"17", mp4:"18"};
-if(/(?:^|,)34/.test(swfArgs.fmt_map)) downloads["hq flv"]="34";
-if(config.IS_HD_AVAILABLE || /(?:^|,)35/.test(swfArgs.fmt_map)) downloads["super hq flv"]="35";
-if(config.IS_HD_AVAILABLE) {
+if (/(?:^|,)34/.test(swfArgs.fmt_map)) downloads["hq flv"]="34";
+if (config.IS_HD_AVAILABLE || /(?:^|,)35/.test(swfArgs.fmt_map)) downloads["super hq flv"]="35";
+if (config.IS_HD_AVAILABLE) {
 	downloads["720p mp4"] = "22";
-	if(/(?:^|,)37/.test(swfArgs.fmt_map)) downloads["1080p mp4"] = "37";
+	if (/(?:^|,)37/.test(swfArgs.fmt_map)) downloads["1080p mp4"] = "37";
 }
 var info=$("watch-ratings-views"), block=new Element("div");
 block.appendChild(document.createTextNode("Download this video as: "));
@@ -607,7 +607,6 @@ for(var dl in downloads) {
 	block.appendChild(document.createTextNode(" // "));
 	block.appendChild(temp);
 }
-//watch.insertBefore(block, watch.childNodes[11]);
 $("watch-info").appendChild(block);
 ifdo($("watch-channel-icon"), function(f) {
 	f.className="";
@@ -622,7 +621,7 @@ function listener() {
 	}}, 1000);
 	$("content").removeEventListener("DOMNodeInserted", listener, false);
 }
-if($("watch-headline-title")) {
+if ($("watch-headline-title")) {
 	try {
 		script();
 	} catch(e) {
