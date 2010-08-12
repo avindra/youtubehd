@@ -437,7 +437,7 @@ for(var i=ads.length-1;i>=0;i--)
 */
 swfArgs.vq=["hd1080", "hd720", "large", "medium", "small"][opts.vq];
 if (swfArgs.fmt_map.indexOf("18")==0 && /3[45]/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/,"");
-if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22)\//.test(swfArgs.fmt_map)) {
+if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|34)\//.test(swfArgs.fmt_map)) {
 	if (RegExp.$1=="0")
 		swfArgs.fmt_list = "18/512000/9/0/115," + swfArgs.fmt_list;
 	else
@@ -445,8 +445,10 @@ if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22)\//.test(swfAr
 	swfArgs.fmt_map = swfArgs.fmt_list;
 	if (swfArgs.fmt_stream_map.split(",").length == 1) {
 		// 240p default, 360p secret
-		location.replace(location.protocol + "//" + location.host +location.pathname + location.search + "&fmt=18" + location.hash);
-		return;
+		if(location.search.indexOf("fmt=18")==-1) {
+			location.replace(location.protocol + "//" + location.host +location.pathname + location.search + "&fmt=18" + location.hash);
+			return;
+		}
 	}
 	else {
 		swfArgs.fmt_stream_map = swfArgs.fmt_stream_map.match(/\|([^,]+)/)[1].replace(/itag=\d+/, "itag=18");
