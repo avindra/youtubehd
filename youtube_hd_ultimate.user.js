@@ -41,7 +41,7 @@ function refresh() {
 }
 function update(resp) {
 	GM_xmlhttpRequest({
-		url : "http://userscripts.org/scripts/source/31864.user.js?",
+		url : "http://userscripts.org/scripts/source/31864.meta.js",
 		method : "GET",
 		onload : function(A) {
 			if (A.responseText.match(/\/\/ @version       (\S+)/) == null) return;
@@ -108,17 +108,17 @@ function Element(A, B, C, D) {
 }
 function center() {
 	var psize = Number(player.style.width.replace(/ ?px/, ""));
-	if (psize > player.parentNode.offsetWidth) {
-		var amt = (Math.round(player.parentNode.offsetWidth / 2 - psize / 2) - 1);
-		if(psize <= 950 && psize >= 855) {
-			console.log([psize, player.parentNode.offsetWidth]);
-			amt -= 950 - psize;
-		}
-		player.style.marginLeft =  amt + "px";
+	if (psize > 960) {
+		player.style.marginLeft =  (Math.round(player.parentNode.offsetWidth / 2 - psize / 2) - 1) + "px";
 	}
 	else {
 		player.style.marginLeft = "0px";
-		player.style.marginLeft = (-2 * (player.offsetLeft + player.parentNode.offsetLeft)) + "px";
+		var amt = -2 * (player.offsetLeft + player.parentNode.offsetLeft);
+		if(psize >= 855) {
+			amt += (psize - player.parentNode.offsetWidth);
+			if(psize >= 908) amt -= psize - 907;
+		}
+		player.style.marginLeft = amt + "px";
 	}
 }
 function fitToWindow() {
@@ -448,9 +448,7 @@ else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|3[457])\/
 			return;
 		}
 	}
-	else {
-		swfArgs.fmt_stream_map = swfArgs.fmt_stream_map.match(/\|([^,]+)/)[1].replace(/itag=\d+/, "itag=18");
-	}
+	else swfArgs.fmt_stream_map = swfArgs.fmt_stream_map.match(/\|([^,]+)/)[1].replace(/itag=\d+/, "itag=18");
 	swfArgs.fmt_url_map = swfArgs.fmt_stream_map.replace(/\|\|tc\.v\d+\.cache\d+\.c\.youtube\.com/g, "");
 }
 var vars="";
