@@ -437,8 +437,8 @@ for(var i=ads.length-1;i>=0;i--)
 	swfArgs.cc_font = "Arial Unicode MS, arial, verdana, _sans";
 */
 swfArgs.vq=["hd1080", "hd720", "large", "medium", "small"][opts.vq];
-if (swfArgs.fmt_map.indexOf("18")==0 && /3[45]/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/,"");
-if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|34)\//.test(swfArgs.fmt_map)) {
+if (swfArgs.fmt_map.indexOf("18")==0 && /3[457]|22/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/,"");
+else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|3[457])\//.test(swfArgs.fmt_map)) {
 	if (RegExp.$1=="0")
 		swfArgs.fmt_list = "18/512000/9/0/115," + swfArgs.fmt_list;
 	else
@@ -456,7 +456,6 @@ if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|34)\//.test(sw
 	}
 	swfArgs.fmt_url_map = swfArgs.fmt_stream_map.replace(/\|\|tc\.v\d+\.cache\d+\.c\.youtube\.com/g, "");
 }
-console.log(swfArgs);
 var vars="";
 for(var arg in swfArgs) if (!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
 player.setAttribute("flashvars", vars);
