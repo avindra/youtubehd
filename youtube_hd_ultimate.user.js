@@ -444,7 +444,9 @@ if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22)\//.test(swfAr
 		swfArgs.fmt_list = "18/640x360/9/0/115," + swfArgs.fmt_list;
 	swfArgs.fmt_map = swfArgs.fmt_list;
 	if (swfArgs.fmt_stream_map.split(",").length == 1) {
-		swfArgs.fmt_stream_map = swfArgs.fmt_stream_map.replace(/v21\.(ls)?cache4/g, "v7.$1cache3").replace(/itag=\d+/, "itag=18").replace(/5\|/, "18|") + "," + swfArgs.fmt_stream_map;
+		// 240p default, 360p secret
+		location.replace(location.protocol + "//" + location.host +location.pathname + location.search + "&fmt=18" + location.hash);
+		return;
 	}
 	else {
 		swfArgs.fmt_stream_map = swfArgs.fmt_stream_map.match(/\|([^,]+)/)[1].replace(/itag=\d+/, "itag=18");
