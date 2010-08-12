@@ -108,9 +108,8 @@ function Element(A, B, C, D) {
 }
 function center() {
 	var psize = Number(player.style.width.replace(/ ?px/, ""));
-	var mgn = Math.round(player.parentNode.offsetWidth / 2 - psize / 2);
 	if (psize > player.parentNode.offsetWidth)
-		player.style.marginLeft = mgn + "px";
+		player.style.marginLeft = (Math.round(player.parentNode.offsetWidth / 2 - psize / 2) - 1) + "px";
 	else {
 		player.style.marginLeft = "0px";
 		player.style.marginLeft = "-" + (2 * (player.offsetLeft + player.parentNode.offsetLeft)) + "px";
@@ -457,11 +456,7 @@ var vars="";
 for (var arg in swfArgs) if (!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
 player.setAttribute("flashvars", vars);
 player.setAttribute("wmode", "transparent");
-switch (opts.player) {
-	default : player.src = config.SWF_CONFIG.url; break;
-	case 1 : player.src = config.SWF_CONFIG.url_v8; break;
-	case 2 : player.src = config.SWF_CONFIG.url_v9as2; break;
-}
+player.src = config.SWF_CONFIG["url" + new Array("", "_v8", "_v9as2")[opts.player]];
 head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
 document.addEventListener("keydown", function(E) {
 	if ("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
