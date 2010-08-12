@@ -12,7 +12,7 @@
 // request the feature. If you supply the code, I will give you attribution if you so desire.
 function Params(A) {
 	var obj = {}, isProp = true, cur, curProp = "", curValue = "";
-	for(var i = 0; i < A.length; ++i) {
+	for (var i = 0; i < A.length; ++i) {
 		cur = A.charAt(i);
 		if (isProp) {
 			if (cur=="=") {
@@ -96,13 +96,13 @@ player.style.__defineSetter__("width", function(x) {
 });
 function Element(A, B, C, D) {
 	A = document.createElement(A);
-	if (B) for(var b in B) {
+	if (B) for (var b in B) {
 		var cur=B[b];
 		if (b.indexOf("on")==0)try{A.addEventListener(b.substring(2), cur, false);}catch(e){alert([b.substring(2), cur])}
 		else if (b=="style") A.setAttribute("style", B[b]);
 		else A[b]=B[b];
 	}
-	if (D) for(var d in D) A.setAttribute(d, D[d]);
+	if (D) for (var d in D) A.setAttribute(d, D[d]);
 	if (C) for each(var c in C) A.appendChild(c);
 	return A;
 }
@@ -230,13 +230,13 @@ optionBox = new Element("div", {
 	style : "display : none",
 	id : "opts"
 });
-for(var opt in opts) {
+for (var opt in opts) {
 	var val = GM_getValue(opt), full = opts[opt][1], a, s=document.createElement("label"), append = true;
 	if (val == null) {
 		if (typeof full == "object") val = 0;
 		else val = full;
 	}
-	switch(typeof val) {
+	switch (typeof val) {
 		case "string" :
 		a = document.createElement("input");
 		a.value = val;
@@ -253,7 +253,7 @@ for(var opt in opts) {
 		break;
 		case "number" :
 		a = document.createElement("select");
-		for(var i = full.length - 1; i>=0; --i) {
+		for (var i = full.length - 1; i>=0; --i) {
 			a.appendChild(new Element("option", {
 				textContent : full[i]
 			}));
@@ -279,7 +279,7 @@ optionBox.appendChild(new Element("a", {
 	onclick : function(E) {
 		E.preventDefault();
 		toggler.textContent="Show Ultimate Options";
-		for(var newOpt, i=newOpts.length-1; i>=0; --i) {
+		for (var newOpt, i=newOpts.length-1; i>=0; --i) {
 			newOpt=newOpts[i];
 			var val;
 			if (newOpt.nodeName=="SELECT") val = newOpt.selectedIndex;
@@ -316,7 +316,7 @@ var sLinks = {
 	"new bug" : "http://code.google.com/p/youtubehd/issues/entry",
 	"new request" : "http://code.google.com/p/youtubehd/issues/entry?template=Feature%20Request"
 };
-for(var link in sLinks) {
+for (var link in sLinks) {
 	linkbox.appendChild(new Element("a", {
 		textContent : link,
 		href : sLinks[link]
@@ -334,7 +334,7 @@ linkbox.appendChild(new Element("a", {
 	title : "This is for easing development. Don't worry about it unless Avindra tells you to use it.",
 	onclick : function(E) {
 		E.preventDefault();
-		for(var arg in swfArgs) if (arg.indexOf("rv")==0) delete swfArgs[arg];
+		for (var arg in swfArgs) if (arg.indexOf("rv")==0) delete swfArgs[arg];
 		opts.swfArgs = swfArgs;
 		opts.ver = thisVer;
 		opts.ua = navigator.userAgent;
@@ -430,7 +430,7 @@ if (opts.hideRate) {
 	ads.push("ratings");
 	ads.push("ratings_module");
 }
-for(var i=ads.length-1;i>=0;i--)
+for (var i=ads.length-1;i>=0;i--)
 	delete swfArgs[ads[i]];
 /*
 	swfArgs.cc_load_policy = "1";
@@ -457,10 +457,10 @@ else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|3[457])\/
 	swfArgs.fmt_url_map = swfArgs.fmt_stream_map.replace(/\|\|tc\.v\d+\.cache\d+\.c\.youtube\.com/g, "");
 }
 var vars="";
-for(var arg in swfArgs) if (!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
+for (var arg in swfArgs) if (!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
 player.setAttribute("flashvars", vars);
 player.setAttribute("wmode", "transparent");
-switch(opts.player) {
+switch (opts.player) {
 	default : player.src = config.SWF_CONFIG.url; break;
 	case 1 : player.src = config.SWF_CONFIG.url_v8; break;
 	case 2 : player.src = config.SWF_CONFIG.url_v9as2; break;
@@ -468,7 +468,7 @@ switch(opts.player) {
 head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
 document.addEventListener("keydown", function(E) {
 	if ("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
-	switch(E.keyCode) {
+	switch (E.keyCode) {
 		case 83: player.style.height = "25px"; return;
 		case 80: player[(player.getPlayerState()==1 ? "pause" : "play") + "Video"](); return;
 		case 82: player.seekTo(0, true); return;
@@ -480,7 +480,7 @@ document.addEventListener("keydown", function(E) {
 		return;
 	}
 	if (E.ctrlKey)
-		switch(E.keyCode) {
+		switch (E.keyCode) {
 			case 38:
 				E.preventDefault();
 				player.setVolume(player.getVolume() + 4);
@@ -578,7 +578,7 @@ var actions = {
 	}
 };
 unsafeWindow.actions = actions;
-for(var action in actions) {
+for (var action in actions) {
 	mnuActions.appendChild(new Element("li", null, [new Element(
 	"span", {
 		className : "yt-uix-button-menu-item",
@@ -604,7 +604,7 @@ var flv=new Element("a", {
 	innerHTML : "flv"
 });
 block.appendChild(flv);
-for(var dl in downloads) {
+for (var dl in downloads) {
 	var temp=flv.cloneNode(false);
 	temp.innerHTML=dl;
 	temp.href+="&fmt="+downloads[dl];
@@ -631,11 +631,5 @@ if ($("watch-headline-title")) {
 	} catch(e) {
 		alert("Error! Please let me know about it (http://userscripts.org/scripts/show/31864):\n\n" + e);
 	}
-} else {
+} else
 	$("content").addEventListener("DOMNodeInserted", listener, false);
-	var xht = unsafeWindow.XMLHttpRequest;
-	xht.prototype.realSend = xht.prototype.send;
-	xht.prototype.send = function(a) {
-		this.realSend(a);
-	};
-}
