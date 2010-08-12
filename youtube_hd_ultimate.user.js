@@ -436,18 +436,7 @@ for(var i=ads.length-1;i>=0;i--)
 	swfArgs.cc_font = "Arial Unicode MS, arial, verdana, _sans";
 */
 swfArgs.vq=["hd1080", "hd720", "large", "medium", "small"][opts.vq];
-//if(config.IS_HD_AVAILABLE && opts.vq >= 2) swfArgs.fmt_map = unescape(swfArgs.fmt_map).replace(/^22[^,]+,/,""); else
 if(swfArgs.fmt_map.indexOf("18")==0 && /3[45]/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/,"");
-/*
-if(swfArgs.fmt_map.indexOf("5/0/7/0/0") != -1 && !/(?:18|22)\//.test(swfArgs.fmt_map)) {
-	console.log("360p > 480p hack attempted");
-	swfArgs.fmt_list = "18/512000/9/0/115," + swfArgs.fmt_list;
-	swfArgs.fmt_map = swfArgs.fmt_list;
-	swfArgs.fmt_stream_map = "18|" + swfArgs.fmt_stream_map.match(/\|([^,]+)/)[1].replace(/itag=\d+/, "itag=18") + "," + swfArgs.fmt_stream_map;
-	swfArgs.fmt_url_map = swfArgs.fmt_stream_map;
-}
-*/
-
 if(/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22)\//.test(swfArgs.fmt_map)) {
 	if(RegExp.$1=="0")
 		swfArgs.fmt_list = "18/512000/9/0/115," + swfArgs.fmt_list;
