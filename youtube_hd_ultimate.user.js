@@ -108,11 +108,17 @@ function Element(A, B, C, D) {
 }
 function center() {
 	var psize = Number(player.style.width.replace(/ ?px/, ""));
-	if (psize > player.parentNode.offsetWidth)
-		player.style.marginLeft = (Math.round(player.parentNode.offsetWidth / 2 - psize / 2) - 1) + "px";
+	if (psize > player.parentNode.offsetWidth) {
+		var amt = (Math.round(player.parentNode.offsetWidth / 2 - psize / 2) - 1);
+		if(psize <= 950 && psize >= 855) {
+			console.log([psize, player.parentNode.offsetWidth]);
+			amt -= 950 - psize;
+		}
+		player.style.marginLeft =  amt + "px";
+	}
 	else {
 		player.style.marginLeft = "0px";
-		player.style.marginLeft = "-" + (2 * (player.offsetLeft + player.parentNode.offsetLeft)) + "px";
+		player.style.marginLeft = (-2 * (player.offsetLeft + player.parentNode.offsetLeft)) + "px";
 	}
 }
 function fitToWindow() {
@@ -280,10 +286,7 @@ optionBox.appendChild(new Element("a", {
 		toggler.textContent="Show Ultimate Options";
 		for (var newOpt, i=newOpts.length-1; i>=0; --i) {
 			newOpt=newOpts[i];
-			var val;
-			if (newOpt.nodeName=="SELECT") val = newOpt.selectedIndex;
-			else val = newOpt[newOpt.type=="text" ? "value" : "checked"];
-			GM_setValue(newOpt.name, val);
+			GM_setValue(newOpt.name, newOpt.nodeName=="SELECT" ? newOpt.selectedIndex : newOpt[newOpt.type=="text" ? "value" : "checked"]);
 		}
 		optionBox.style.display="none";
 		refresh();
@@ -399,9 +402,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 					unsafeWindow.onresize = fitToWindow;
 					fitToWindow();
 				}
-			} else {
-				unsafeWindow.onresize = null;
-			}
+			} else unsafeWindow.onresize = null;
 		};
 		player.addEventListener("onPlaybackQualityChange","newFmt");
 	}
@@ -419,7 +420,7 @@ if (!opts.autoplay && !opts.autobuffer)
 else if (opts.autoplay) swfArgs.autoplay="1";
 if (location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s)?(\d*)/)) {
 	var start=0;
-	if (RegExp.$1) start += Number(RegExp.$1) * 60;
+	if (RegExp.$1) start += Number(RegExp.$1 + "0") * 6;
 	if (RegExp.$2) start += Number(RegExp.$2);
 	if (RegExp.$3) start += Number(RegExp.$3);
 	swfArgs.start = start;
