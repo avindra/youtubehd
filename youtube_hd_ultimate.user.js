@@ -108,9 +108,8 @@ function Element(A, B, C, D) {
 }
 function center() {
 	var psize = Number(player.style.width.replace(/ ?px/, ""));
-	if (psize > 960) {
+	if (psize > 960)
 		player.style.marginLeft =  (Math.round(player.parentNode.offsetWidth / 2 - psize / 2) - 1) + "px";
-	}
 	else {
 		player.style.marginLeft = "0px";
 		var amt = -2 * (player.offsetLeft + player.parentNode.offsetLeft);
@@ -258,11 +257,10 @@ for (var opt in opts) {
 		break;
 		case "number" :
 		a = document.createElement("select");
-		for (var i = full.length - 1; i>=0; --i) {
+		for (var i = full.length - 1; i>=0; --i)
 			a.appendChild(new Element("option", {
 				textContent : full[i]
 			}));
-		}
 		a.selectedIndex = val;
 		break;
 	}
