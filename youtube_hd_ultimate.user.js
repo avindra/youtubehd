@@ -56,7 +56,7 @@ if ((GM_getValue("lastCheck"), now) <= (now - 86400000)) {
 	GM_setValue("lastCheck", now);
 	update(false);
 }
-function ifdo(A, B) {if (A) B(A)}
+function ifdo(A, B) {if (A) B.apply(A)}
 var player=unsafeWindow.document.getElementById("movie_player"),
 	config = unsafeWindow.yt.config_, swfArgs = new Params(player.getAttribute("flashvars")),
 	optionBox,
@@ -87,9 +87,9 @@ var opts = {
 	utterBlack : new Array("Total Black", false, "This will make cinema mode opaque black, as opposed to trasparent black."),
 	jumpToPlayer : new Array("Jump to player", true, "Especially with big mode on, this is nice. It scrolls down to the video for you.")
 };
-ifdo($("watch-longform-player"), function(toggle) {
-	toggle.removeAttribute("onclick");
-	toggle.addEventListener("click", fitBig, false);
+ifdo($("watch-longform-player"), function() {
+	this.removeAttribute("onclick");
+	this.addEventListener("click", fitBig, false);
 });
 player.style.__defineSetter__("width", function(x) {
 	player.setAttribute("style", "width:" + x + "!important;");
@@ -598,8 +598,21 @@ for (var dl in downloads) {
 	block.appendChild(temp);
 }
 $("watch-info").appendChild(block);
-ifdo($("watch-channel-icon"), function(f) {
-	f.className="";
+ifdo($("quicklist"), function() {
+	globals.attachQLRefresh = function(e) {
+		if (this.getAttribute("data-loaded-active")=="true")
+		{
+			this.addEventListener("DOMAttrModified", function(e) {
+				refresh();
+			}, false);
+			this.removeEventListener("DOMAttrModified", globals.attachQLRefresh, false);
+			delete globals.attachQLRefresh;
+		}
+	};
+	this.addEventListener("DOMAttrModified", globals.attachQLRefresh, false);
+});
+ifdo($("watch-channel-icon"), function() {
+	this.className="";
 });
 }
 function listener() {
