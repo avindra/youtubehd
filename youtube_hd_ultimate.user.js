@@ -65,8 +65,8 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 	newOpts = new Array();
 document.title = document.title.substring(10);
 var opts = {
-	vq : new Array("Max Quality", ["240p", "360p", "480p", "720p", "1080p"], "Please choose the maximum video quality your computer can handle."),
-	player : new Array("Player", ["v8", "v9as2", "Latest"], "Choose which player you prefer using."),
+	vq : new Array("Max Quality", new Array("240p", "360p", "480p", "720p", "1080p"), "Please choose the maximum video quality your computer can handle."),
+	player : new Array("Player", new Array("v8", "v9as2", "Latest"), "Choose which player you prefer using."),
 	autoplay : new Array("Autoplay", true, "By default, YouTube autoplays all of it's videos."),
 	autobuffer : new Array("Autobuffer", false, "If you have a slow computer and/or a slow connection, turn this on to let the video download while it's paused, then you can hit the play button."),
 	usecolor : new Array("Enable colors", true, "Choose this option if you want to enable custom colors. Colors only work in the old players."),
@@ -82,8 +82,6 @@ var opts = {
 	vol : new Array("Volume", "50", "The volume, as an integer, from 0 to 100."),
 	snapBack : new Array("Snap back", true, "Makes the video smaller if you turn off HD/HQ mid-video using the player's button."),
 	loop : new Array("Loop", false, "Are you a loopy fanatic? Turn this on! Goes well if you watch a lot of AMV's I hear."),
-	autoCinema : new Array("Automatic Cinema", false, "Like YouTube \"Comfort in Black\", this darkens everything except for the video player. Perfectly mimics YouTube's native cinema mode."),
-	utterBlack : new Array("Total Black", false, "This will make cinema mode opaque black, as opposed to trasparent black."),
 	jumpToPlayer : new Array("Jump to player", true, "Especially with big mode on, this is nice. It scrolls down to the video for you.")
 };
 player.style.__defineSetter__("width", function(x) {
@@ -150,8 +148,6 @@ GM_addStyle("#vidtools > * {\
 #movie_player {\
 width:1px!important;height:1px!important;\
 }\
-#light-switch {width:17px;height:25px;}\
-#watch-longform-shade {z-index:5!important}\
 .loop {\
 	width: 11px;height: 15px;\
 	margin-left: 3px;\
@@ -164,10 +160,6 @@ width:1px!important;height:1px!important;\
 .loop.off {\
 	background-image: url(data:image/gif;base64,R0lGODlhEAAQAKUuAG0AAG8AAoYAAIgAAYoAAIwAAI0AAJIAAJQAAZUAAJYAAJcAAaAAAKYAAKYAAaECAK4AAK8AALAAAa0BALAAA64BALQAAK8CALkAAboAALQDALsBAMEAAMQAAMkAAMcBAMsBAMwBANYAANcAANgAAdoAANoBAN4BAOMAANkDAOQBAOoBAP8AAP8BAP///////////////////////////////////////////////////////////////////////yH+DUJ5IEplcm9lbnowcgoAIfkEAQoAPwAsAAAAABAAEAAABmfAn3BILBqPxsJjozEIE8jfanSSCAUIx1HVKkWGlEWjiOJwRAgiBlI0eYSBIidF/ICQoU89hATphyQcRQBCHiZFEBhEByIdHChFDgoVQxMlLCpHDQgDQhcnIytRUD8EFhkMBVGrrERBADs=);\
 }\
-.light {background-position:0 -592px}\
-.light:hover {background-position:-17px -592px!important;}\
-.dark {background-position:-34px -592px}\
-.dark:hover {background-position:-51px -592px!important;}\
 #version {\
 	float : right;\
 	padding-left: 7px !important;padding-right: 3px;\
@@ -396,7 +388,6 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		};
 		player.addEventListener("onPlaybackQualityChange", "newFmt");
 	}
-	if (unsafeWindow.toggleLights && opts.autoCinema) unsafeWindow.toggleLights(true);
 	player.focus();
 };
 if (opts.usecolor) {
@@ -472,28 +463,6 @@ document.addEventListener("keydown", function(E) {
 				return;
 		}
 }, false);
-var shade, tog;
-function toggle() {
-	if (document.body.className.indexOf("watch-lights-off") != -1) {
-		tog.className=tog.className.replace("dark", "light");
-		shade.style.display = "none";
-		document.body.className = document.body.className.replace("watch-lights-off", "");
-	} else {
-		shade.style.height = (window.innerHeight + window.scrollMaxY) + "px";
-		tog.className=tog.className.replace("light", "dark");
-		shade.style.display = "inline";
-		document.body.className += " watch-lights-off";
-	}
-}
-if (!unsafeWindow.toggleLights) {
-	if (opts.autoCinema) document.body.className += " watch-lights-off";
-	document.body.appendChild(shade=new Element("div", {onclick : toggle, id : "watch-longform-shade", style : "height : "+(window.innerHeight + window.scrollMaxY) + "px; display : " + (opts.autoCinema ? "" : "none")}));
-	head.appendChild(tog=new Element("span", {
-			id : "light-switch",
-			className : "master-sprite " + (opts.autoCinema ? "dark" : "light"),
-			onclick : toggle
-	}));
-}
 head.appendChild(new Element("span", {
 	className : "loop o" + (opts.loop ? "n" : "ff"),
 	style : "padding-left:2px;padding-right:2px;",
@@ -528,7 +497,7 @@ $("watch-actions-right").appendChild(
 		onclick : function(E) {
 		//	E.preventDefault();
 		}
-	}, [
+	}, new Array(
 		new Element("span", {
 			className : "yt-uix-button-content",
 			textContent : "YTHD",
@@ -541,7 +510,7 @@ $("watch-actions-right").appendChild(
 		mnuActions = new Element("ul", {
 			className : "yt-uix-button-menu"
 		})
-	], {
+	), {
 		"type" : "button",
 		"data-tooltip" : "This allows you to share links with friends with the current time and best quality."
 	}),
@@ -560,17 +529,15 @@ var actions = {
 };
 unsafeWindow.actions = actions;
 for (var action in actions) {
-	mnuActions.appendChild(new Element("li", null, [new Element(
+	mnuActions.appendChild(new Element("li", null, new Array(new Element(
 	"span", {
 		className : "yt-uix-button-menu-item",
 		onclick : actions[action],
 		textContent : action
 	}, null, {
 		onclick : "actions[\"" + action + "\"]()"
-	})]));
+	}))));
 }
-if (opts.utterBlack) GM_addStyle("#watch-longform-shade, .watch-lights-off {background : black !important;}");
-
 var downloads={"3gp":"17", mp4:"18"};
 if (/(?:^|,)34/.test(swfArgs.fmt_map)) downloads["hq flv"]="34";
 if (config.IS_HD_AVAILABLE || /(?:^|,)35/.test(swfArgs.fmt_map)) downloads["super hq flv"]="35";
