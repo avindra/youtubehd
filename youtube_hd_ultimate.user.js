@@ -11,8 +11,8 @@
 // This entire script is licensed under the license listed above. If you want to add a feature to it,
 // request the feature. If you supply the code, I will give you attribution if you so desire.
 function Params(A) {
-	var obj = {}, isProp = true, cur, curProp = "", curValue = "";
-	for (var i = 0; i < A.length; ++i) {
+	var obj = {};
+	for (var i = 0, isProp = true, cur, curProp = "", curValue = ""; i < A.length; ++i) {
 		cur = A.charAt(i);
 		if (isProp) {
 			if (cur=="=") {
@@ -282,10 +282,8 @@ optionBox.appendChild(new Element("a", {
 	onclick : function(E) {
 		E.preventDefault();
 		toggler.textContent="Show Ultimate Options";
-		for (var newOpt, i=newOpts.length-1; i>=0; --i) {
-			newOpt=newOpts[i];
+		for (var newOpt=newOpts[i], i=newOpts.length-1; i>=0; --i)
 			GM_setValue(newOpt.name, newOpt.nodeName=="SELECT" ? newOpt.selectedIndex : newOpt[newOpt.type=="text" ? "value" : "checked"]);
-		}
 		optionBox.style.display="none";
 		refresh();
 	}
