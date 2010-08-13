@@ -5,7 +5,7 @@
 // @include       http://youtube.com/watch*
 // @namespace     #aVg
 // @license       CC-BY-NC-ND http://creativecommons.org/licenses/by-nc-nd/3.0/
-// @version       1.2.0
+// @version       1.2.1
 // ==/UserScript==
 // Do not fiddle with the script for any reason! If you're having problems, use the various contact options!
 // This entire script is licensed under the license listed above. If you want to add a feature to it,
@@ -32,7 +32,7 @@ function Params(A) {
 	return obj;
 };
 function $(A) {return document.getElementById(A);}
-const thisVer="1.2.0";
+const thisVer="1.2.1";
 function script() {
 function refresh() {
 	var pos = window.scrollY;
@@ -361,7 +361,7 @@ head.addEventListener("click", function() {
 if (opts.jumpToPlayer) head.scrollIntoView(true);
 unsafeWindow.stateChanged=function(state) {
 	if (state!=0) return;
-	if (config.SWF_IS_PLAYING_ALL) unsafeWindow.gotoNext();
+	if (config.LIST_AUTO_PLAY_ON) location.href = config["LIST_PLAY_NEXT_URL" + (config.SHUFFLE_ENABLED ? "_WITH_SHUFFLE" : "")];
 	else if (opts.loop) {
 		player.seekTo(0, true);
 		player.playVideo();
@@ -411,7 +411,7 @@ if (opts.usecolor) {
 	swfArgs.color2=opts.c2;
 }
 if (opts.hidenotes) swfArgs.iv_load_policy="3";
-if (config.SWF_IS_PLAYING_ALL) swfArgs.playnext = "1";
+if (config.LIST_AUTO_PLAY_ON) swfArgs.playnext = "1";
 if (!opts.autoplay && !opts.autobuffer)
 	swfArgs.autoplay="0";
 else if (opts.autoplay) swfArgs.autoplay="1";
