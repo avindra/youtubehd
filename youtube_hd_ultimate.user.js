@@ -603,18 +603,8 @@ ifdo($("watch-channel-icon"), function(f) {
 });
 }
 function listener() {
-	setTimeout(function() {
-	try{
-		script();
-	} catch(e) {
-		alert("Error! Please let me know about it (http://userscripts.org/scripts/show/31864):\n" + e);
-	}}, 1000);
+	setTimeout(script, 1000);
 	$("content").removeEventListener("DOMNodeInserted", listener, false);
 }
-if ($("watch-headline-title")) {
-	try {
-		script();
-	} catch(e) {
-		alert("Error! Please let me know about it (http://userscripts.org/scripts/show/31864):\n\n" + e);
-	}
-} else $("content").addEventListener("DOMNodeInserted", listener, false);
+if ($("watch-headline-title")) script();
+else $("content").addEventListener("DOMNodeInserted", listener, false);
