@@ -147,28 +147,23 @@ GM_addStyle("#vidtools > * {\
 .yt-rounded {background-color:white!important}\
 #movie_player {\
 width:1px!important;height:1px!important;\
-}\
-.loop {\
+} .loop {\
 	width: 11px;height: 15px;\
 	margin-left: 3px;\
 	margin-right: 3px;\
 	margin-top: 4px;\
-}\
-.loop.on {\
+} .loop.on {\
 	background-image: url(data:image/gif,GIF89a%10%00%10%00%F4%00%00%FF%F6%F6%FF%00%00%FE%F0%F0%FE66%FE%7F%7F%FE%05%05%FE%24%24%FE%CF%CF%FE%A2%A2%FE%15%15%FErr%FEbb%FE%DC%DC%FE%93%93%FE%BF%BF%FEEE%FESS%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%21%FF%0BNETSCAPE2.0%03%01%00%00%00%21%FE%1ACreated%20with%20ajaxload.info%00%21%F9%04%09%0A%00%00%00%2C%00%00%00%00%10%00%10%00%00%05P%20%20%8Edi%9E%A50%14l%21%2A%84%60%AA%AD%98%14%C6%91%1A5%80%F0%06%D9%88%80%5B%8D%04%3C%02i%85P%91%10%85%01%89%85%A2%8E%AC%29%2C%80IZ%F8%A2%24b%F0%BAH%92%908%84%A85%26%1Dx%895k%20%3C%13%14%F2y%1D%C5%EF%8FB%00%21%F9%04%09%0A%00%00%00%2C%00%00%00%00%10%00%10%00%00%05h%20%20%8AG%D2%8Ch%2A%1A%C5%E0%A8%A8%40%24E%7D%C0%C0%C1%D6%C5%02%08%8C%94%80eh%14%12%0C%C1%C0%20%40%11%0AL%C0%80%F0cQG%83%02B%B4%E5%B6P5%98%20%3C%AA5UdQ%B6%2B%E8%22%BE%A3g%940%A8%16%AE%A2%A1%8FAk%10%CF%23A%00%0B%3CP70%07%3C%09%04%800%0EY%068%2A%0D%09%87%23%21%00%21%F9%04%09%0A%00%00%00%2C%00%00%00%00%10%00%10%00%00%05%60%20%20%8E%23%F3%90%28%DA%14H%2A%0A%C4P%14%09-%A4%871%EF3%81%0A%3AC%CB1K%B4H%84%82%E1%06H.%98%24%D9%B1y%00%08%10%BE%D1%CC%05%D8j%0B.%81WD%40%DC%0EY%00%A20H%09%16%85%2C0%8EB%D4%0A%8Ek%10J%E6%ED%0CU%3F5w%03%04%7C%24k%0D%5C%29%0F%0C%8B%21%00%21%F9%04%09%0A%00%00%00%2C%00%00%00%00%10%00%10%00%00%05R%20%20%8Edi%9E%80%20%94%021%14%C5%40%A8%83C%1E%06%AC%17%C6k%8B%82%9C%01%21B%E4%60%3F%00%81%B7%02%BE%90%23E%828zBQX%80c%BBm%A2v%0B%12%22%A1%20%E9%C2%A3%60%81%60%86%0DUF%A6%19r%DC%19%0E%A5p%EB%29%F3f%FF%80%21%00%21%F9%04%09%0A%00%00%00%2C%00%00%00%00%10%00%10%00%00%05%60%20%20%8Edi%9E%A8%40%0CE1%10%C2%C9%18m%5D%18%C7%B9%18H%8C%D0%86%D8%28%07%10%8A%044%02%20%E7%28%2C%18%A6F%21aH%00XS%98%08%81m5%A4%B5%01bDH%B4%06%00%AA%B9ab%2C%0A%8E%25%80p3%16c%C4%23%B0%27%F8%0D%EC%22%07467P%26%2AX%2F%80%28%8C%8D%24%21%00%21%F9%04%09%0A%00%00%00%2C%00%00%00%00%10%00%10%00%00%05_%20%20%8Edi%9E%A8H%14%C5%40%08%A6%404%00%C2%B2%C6A%22I%91%08%B0%9A%A1%60%08%3En%85%05I0%24%88%18%8D%1EK7%B2%0DH%2C%07%C1%89-t%83%2A%82%83E%1A%14%10%A4%C3-%D1%60%A8%88%60%C0%02%F9%101%89%08%18%B0%97%40%8F%0EC7h%08%2F1%04f%05%5C%29%8B%8C%26%21%00%3B%00%00%00%00%00%00%00%00%00);\
-}\
-.loop.off {\
+} .loop.off {\
 	background-image: url(data:image/gif;base64,R0lGODlhEAAQAKUuAG0AAG8AAoYAAIgAAYoAAIwAAI0AAJIAAJQAAZUAAJYAAJcAAaAAAKYAAKYAAaECAK4AAK8AALAAAa0BALAAA64BALQAAK8CALkAAboAALQDALsBAMEAAMQAAMkAAMcBAMsBAMwBANYAANcAANgAAdoAANoBAN4BAOMAANkDAOQBAOoBAP8AAP8BAP///////////////////////////////////////////////////////////////////////yH+DUJ5IEplcm9lbnowcgoAIfkEAQoAPwAsAAAAABAAEAAABmfAn3BILBqPxsJjozEIE8jfanSSCAUIx1HVKkWGlEWjiOJwRAgiBlI0eYSBIidF/ICQoU89hATphyQcRQBCHiZFEBhEByIdHChFDgoVQxMlLCpHDQgDQhcnIytRUD8EFhkMBVGrrERBADs=);\
-}\
-#version {\
+} #version {\
 	float : right;\
 	padding-left: 7px !important;padding-right: 3px;\
 	background-color: white;\
 	color: black;\
 	-moz-border-radius-bottomright : 5px;-moz-border-radius-bottomleft : 3px;\
 	border : solid grey 1px;\
-}\
-#opts {\
+} #opts {\
 	background-color: black;\
 	color : white;\
 	position : absolute;\
@@ -177,41 +172,34 @@ width:1px!important;height:1px!important;\
 	-moz-border-radius : 12px;\
 	border : 5px outset red;\
 	z-index : 100000;\
-}\
-#myLinks {\
+} #myLinks {\
 	float : right;\
 	margin-top : -435px;\
 	margin-right: 17px;\
 	font-size: 16px;\
-}\
-#myLinks a {\
+} #myLinks a {\
 	color : white;\
 	text-decoration: underline;\
 	display: block;\
 	font-size: 12px;\
-}\
-#opts input, #opts select {\
+} #opts input, #opts select {\
 	margin-left: 3px;\
 	padding-left: 4px;\
-}\
-#opts label {\
+} #opts label {\
 	display : block;\
 	padding : 2px;\
-}\
-#opts label:hover {text-shadow: 1px 2px 1px yellow !important;}\
+} #opts label:hover {text-shadow: 1px 2px 1px yellow !important;}\
 #opts label.on {\
 	font-style : italic;\
 	text-shadow : 1px 0 4px white;\
 	color : white;\
-}\
-a {cursor:pointer;}\
+} a {cursor:pointer;}\
 #opts h1 {\
 	background-color: red;\
 	-moz-border-radius: 6px;\
 	padding : 4px;\
 	text-shadow: 1px -1px 4px white;\
-}\
-.watch-wide-mode, #watch-this-vid, #watch-player-div {padding-left:0!important}\
+} .watch-wide-mode, #watch-this-vid, #watch-player-div {padding-left:0!important}\
 #opts p {\
 	padding-left: 20px;\
 	font-family : Calibri, Comic Sans MS;\
@@ -548,30 +536,28 @@ if (config.IS_HD_AVAILABLE) {
 var info=$("watch-ratings-views"), block=new Element("div");
 block.appendChild(document.createTextNode("Download this video as: "));
 var flv=new Element("a", {
-	href : "/get_video?video_id="+swfArgs.video_id+"&t="+swfArgs.t+"&asv=",
-	innerHTML : "flv"
+	href : "/get_video?asv&video_id="+swfArgs.video_id+"&t="+swfArgs.t,
+	textContent : "flv"
 });
 block.appendChild(flv);
 for (var dl in downloads) {
 	var temp=flv.cloneNode(false);
-	temp.innerHTML=dl;
+	temp.appendChild(document.createTextNode(dl));
 	temp.href+="&fmt="+downloads[dl];
 	block.appendChild(document.createTextNode(" // "));
 	block.appendChild(temp);
 }
 $("watch-info").appendChild(block);
 var el = $("quicklist");
-if (el) (function() {
-	globals.attachQLRefresh = function(e) {
-		if (this.getAttribute("data-loaded-active")!="true") return;
-		this.addEventListener("DOMAttrModified", refresh, false);
-		this.removeEventListener("DOMAttrModified", globals.attachQLRefresh, false);
-		delete globals.attachQLRefresh;
-	};
-	this.addEventListener("DOMAttrModified", globals.attachQLRefresh, false);
-}).apply(el);
-
-
+if (el) {
+globals.attachQLRefresh = function(e) {
+	if (this.getAttribute("data-loaded-active")!="true") return;
+	this.addEventListener("DOMAttrModified", refresh, false);
+	this.removeEventListener("DOMAttrModified", globals.attachQLRefresh, false);
+	delete globals.attachQLRefresh;
+};
+el.addEventListener("DOMAttrModified", globals.attachQLRefresh, false);
+}
 }
 function listener() {
 	setTimeout(script, 1000);
