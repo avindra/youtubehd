@@ -396,8 +396,7 @@ if (opts.usecolor) {
 }
 if (opts.hidenotes) swfArgs.iv_load_policy="3";
 if (config.LIST_AUTO_PLAY_ON) swfArgs.playnext = "1";
-if (!opts.autoplay && !opts.autobuffer)
-	swfArgs.autoplay="0";
+if (!opts.autoplay && !opts.autobuffer) swfArgs.autoplay="0";
 else if (opts.autoplay) swfArgs.autoplay="1";
 if (location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s)?(\d*)/)) {
 	var start=0;
