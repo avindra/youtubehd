@@ -5,7 +5,7 @@
 // @include       http://youtube.com/watch*
 // @namespace     #aVg
 // @license       CC-BY-NC-ND http://creativecommons.org/licenses/by-nc-nd/3.0/
-// @version       1.2.1
+// @version       1.2.2
 // ==/UserScript==
 // Do not fiddle with the script for any reason! If you're having problems, use the various contact options!
 // This entire script is licensed under the license listed above. If you want to add a feature to it,
@@ -32,7 +32,7 @@ function Params(A) {
 	return obj;
 }
 function $(A) {return document.getElementById(A);}
-const thisVer="1.2.1";
+const thisVer="1.2.2";
 function script() {
 function refresh() {
 	var pos = window.scrollY;
