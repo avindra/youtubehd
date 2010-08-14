@@ -69,6 +69,9 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 		},
 		setWidth : function(w) {
 			player.parentNode.style.width = w + "px";
+		},
+		setMargin : function(m) {
+			player.parentNode.style.marginLeft = m + "px";
 		}
 	},
 	head=$("watch-headline-title"),
@@ -110,21 +113,12 @@ function Element(A, B, C, D) {
 	return A;
 }
 function center() {
-	var psize = Number(player.style.width.replace(/ ?px/, ""));
-	if (psize > 960) {
-		var amt = Math.round(player.parentNode.offsetWidth / 2 - psize / 2) - 1;
-		if(opts.bigMode && !opts.fit) amt /= 2;
-		player.style.marginLeft = amt + "px";
-	}
+	var psize = player.offsetWidth;
+	if (psize > 960) globals.setMargin(Math.round((960 - psize) / 2) - 1);
 	else if (opts.bigMode && !opts.fit) return;
 	else {
-		player.style.marginLeft = "0px";
-		var amt = -2 * (player.offsetLeft + player.parentNode.offsetLeft);
-		if (psize >= 855) {
-			amt += (psize - player.parentNode.offsetWidth);
-			if (psize >= 908) amt -= psize - 907;
-		}
-		player.style.marginLeft = amt + "px";
+		globals.setMargin("0");
+		globals.setMargin(-1 * (player.offsetLeft + player.parentNode.offsetLeft));
 	}
 }
 function fitToWindow() {
@@ -138,7 +132,7 @@ function fitBig(force) {
 	if (already)
 		globals.setHeight(window.innerHeight - 150);
 	else {
-		player.style.marginLeft="0";
+		globals.setMargin("0");
 		globals.setWidth("640");
 		globals.setHeight("385");
 	}
@@ -369,7 +363,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 	} else if (opts.true720p && config.IS_HD_AVAILABLE) {
 		globals.setWidth("1280");
 		globals.setHeight("745");
-		player.style.marginLeft="-160px";
+		globals.setMargin("-160px");
 	}
 	if (opts.useVol && opts.vol.match(/(\d+)/)) player.setVolume(Number(RegExp.$1));
 	if (opts.autobuffer) player.pauseVideo();
