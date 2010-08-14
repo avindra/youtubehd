@@ -418,8 +418,6 @@ for (var i=ads.length-1;i>=0;i--)
 swfArgs.vq=["hd1080", "hd720", "large", "medium", "small"][opts.vq];
 if (swfArgs.fmt_map.indexOf("18")==0 && /3[457]|22/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/, "");
 else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|3[457])\//.test(swfArgs.fmt_map)) {
-	swfArgs.fmt_list = "18/" + (RegExp.$1=="0" ? "512000" : "640x360") + "/9/0/115," + swfArgs.fmt_list;
-	swfArgs.fmt_map = swfArgs.fmt_list;
 	if (swfArgs.fmt_stream_map.split(",").length == 1) {
 		// 240p default, 360p secret
 		if (location.search.indexOf("fmt=18")==-1) {
@@ -427,6 +425,8 @@ else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|3[457])\/
 			return;
 		}
 	}
+	swfArgs.fmt_list = "18/" + (RegExp.$1=="0" ? "512000" : "640x360") + "/9/0/115," + swfArgs.fmt_list;
+	swfArgs.fmt_map = swfArgs.fmt_list;
 	else swfArgs.fmt_stream_map = swfArgs.fmt_stream_map.match(/\|([^,]+)/)[1].replace(/itag=\d+/, "itag=18");
 	swfArgs.fmt_url_map = swfArgs.fmt_stream_map.replace(/\|\|tc\.v\d+\.cache\d+\.c\.youtube\.com/g, "");
 }
