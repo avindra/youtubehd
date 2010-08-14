@@ -106,8 +106,11 @@ function Element(A, B, C, D) {
 }
 function center() {
 	var psize = Number(player.style.width.replace(/ ?px/, ""));
-	if (psize > 960)
-		player.style.marginLeft =  ((Math.round(player.parentNode.offsetWidth / 2 - psize / 2) - 1)) + "px";
+	if (psize > 960) {
+		var amt = Math.round(player.parentNode.offsetWidth / 2 - psize / 2) - 1;
+		if(opts.bigMode && !opts.fit) amt /= 2;
+		player.style.marginLeft = amt + "px";
+	}
 	else if (opts.bigMode && !opts.fit) return;
 	else {
 		player.style.marginLeft = "0px";
@@ -134,8 +137,7 @@ function fitBig(force) {
 		player.style.width = "640px";
 		player.style.height = "385px";
 	}
-	var ratio = config.IS_WIDESCREEN ? 1.77 : 1.33;
-	player.style.width = Math.round((player.offsetHeight - globals.getHeight()) * ratio) + "px";
+	player.style.width = Math.round((player.offsetHeight - globals.getHeight()) * (config.IS_WIDESCREEN ? 1.77 : 1.33)) + "px";
 	center();
 }
 // if (player.PercentLoaded()!=100) player.src += "";
