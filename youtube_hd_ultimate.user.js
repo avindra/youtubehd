@@ -363,7 +363,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 	} else if (opts.true720p && config.IS_HD_AVAILABLE) {
 		globals.setWidth("1280");
 		globals.setHeight("745");
-		globals.setMargin("-160px");
+		globals.setMargin("-160");
 	}
 	if (opts.useVol && opts.vol.match(/(\d+)/)) player.setVolume(Number(RegExp.$1));
 	if (opts.autobuffer) player.pauseVideo();
