@@ -30,7 +30,7 @@ function Params(A) {
 		}
 	}
 	return obj;
-};
+}
 function $(A) {return document.getElementById(A);}
 const thisVer="1.2.1";
 function script() {
@@ -44,7 +44,7 @@ function update(resp) {
 		url : "http://userscripts.org/scripts/source/31864.meta.js",
 		method : "GET",
 		onload : function(A) {
-			if (A.responseText.match(/\/\/ @version       (\S+)/) == null) return;
+			if (A.responseText.match(/\/\/ @version {7}(\S+)/) == null) return;
 			if (RegExp.$1 != thisVer) {
 				if (confirm("There is a new version of YouTube HD Ultimate.\n\nInstall it?")) location.href = "http://userscripts.org/scripts/source/31864.user.js";
 			} else if (resp) alert("There is no new version at this time.");
