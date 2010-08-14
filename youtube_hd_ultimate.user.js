@@ -60,7 +60,12 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 	config = unsafeWindow.yt.config_, swfArgs = new Params(player.getAttribute("flashvars")),
 	optionBox,
 	toggler,
-	globals = {},
+	globals = {
+		isAs3 : false,
+		getHeight : function(miniMode) {
+			return this.isAs3 ? miniMode ? 35 : 29 : 25
+		}
+	},
 	head=$("watch-headline-title"),
 	newOpts = new Array();
 document.title = document.title.substring(10);
@@ -91,7 +96,7 @@ function Element(A, B, C, D) {
 	A = document.createElement(A);
 	if (B) for (var b in B) {
 		var cur=B[b];
-		if (b.indexOf("on")==0)try{A.addEventListener(b.substring(2), cur, false);}catch(e){alert([b.substring(2), cur])}
+		if (b.indexOf("on")==0) A.addEventListener(b.substring(2), cur, false);
 		else if (b=="style") A.setAttribute("style", B[b]);
 		else A[b]=B[b];
 	}
@@ -102,7 +107,8 @@ function Element(A, B, C, D) {
 function center() {
 	var psize = Number(player.style.width.replace(/ ?px/, ""));
 	if (psize > 960)
-		player.style.marginLeft =  (Math.round(player.parentNode.offsetWidth / 2 - psize / 2) - 1) + "px";
+		player.style.marginLeft =  ((Math.round(player.parentNode.offsetWidth / 2 - psize / 2) - 1)) + "px";
+	else if (opts.bigMode && !opts.fit) return;
 	else {
 		player.style.marginLeft = "0px";
 		var amt = -2 * (player.offsetLeft + player.parentNode.offsetLeft);
@@ -122,18 +128,14 @@ function fitBig(force) {
 	var already = (typeof force=="boolean") ? force : !unsafeWindow._hasclass($("baseDiv"), "watch-wide-mode");
 	unsafeWindow.yt.www.watch.player.enableWideScreen(already, true);
 	if (already)
-		player.parentNode.style.height = player.style.height = (window.innerHeight - 150) + "px";
+		player.parentNode.style.height = (window.innerHeight - 150) + "px";
 	else {
 		player.style.marginLeft="0";
 		player.style.width = "640px";
 		player.style.height = "385px";
 	}
-	var ratio = config.IS_WIDESCREEN ? 1.77 : 1.33, w = Math.round((player.offsetHeight - 25) * ratio);
-	if (w > player.parentNode.offsetWidth) {
-		w = player.parentNode.offsetWidth;
-		player.style.height = Math.round(w / ratio + 25) + "px";
-	}
-	player.style.width = w + "px";
+	var ratio = config.IS_WIDESCREEN ? 1.77 : 1.33;
+	player.style.width = Math.round((player.offsetHeight - globals.getHeight()) * ratio) + "px";
 	center();
 }
 // if (player.PercentLoaded()!=100) player.src += "";
@@ -218,6 +220,7 @@ for (var opt in opts) {
 	switch (typeof val) {
 		case "string" :
 		a = document.createElement("input");
+		a.addEventListener("keyup", refresh, false);
 		a.value = val;
 		break;
 		case "boolean" :
@@ -346,9 +349,8 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 	player.setPlaybackQuality(["hd1080", "hd720", "large", "medium", "small"][opts.vq]);
 	if (opts.bigMode) fitBig(true);
 	if (opts.min) {
-		globals.height = player.style.height;
 		fitToWindow();
-		player.style.height = "25px";
+		player.style.height = globals.getHeight(true) + "px";
 	} else if (opts.fit) {
 		globals.sizer = setInterval(function() {
 			if(player.getDuration()==0) return;
@@ -369,7 +371,6 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		player.data += "";
 		return;
 	}
-	globals.height = player.style.height;
 	player.addEventListener("onStateChange", "stateChanged");
 	if (opts.snapBack) {
 		unsafeWindow.newFmt=function(fmt) {
@@ -384,6 +385,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		};
 		player.addEventListener("onPlaybackQualityChange", "newFmt");
 	}
+	globals.height = player.offsetHeight + "px";
 	player.focus();
 };
 if (opts.usecolor) {
@@ -433,11 +435,12 @@ for (var arg in swfArgs) if (!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+e
 player.setAttribute("flashvars", vars);
 player.setAttribute("wmode", "transparent");
 player.src = config.SWF_CONFIG["url" + new Array("", "_v8", "_v9as2")[opts.player]];
+globals.isAs3 = player.src.indexOf("as3") != -1;
 head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
 document.addEventListener("keydown", function(E) {
 	if ("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
 	switch (E.keyCode) {
-		case 83: player.style.height = "25px"; return;
+		case 83: player.style.height = globals.getHeight(true) + "px"; return;
 		case 80: player[(player.getPlayerState()==1 ? "pause" : "play") + "Video"](); return;
 		case 82: player.seekTo(0, true); return;
 		case 77: player[player.isMuted() ? "unMute" : "mute"](); return;
@@ -476,10 +479,10 @@ head.appendChild(new Element("a", {
 			if (opts.fit) {
 				unsafeWindow.onresize = fitToWindow;
 				fitToWindow();
-			} else player.style.height = globals.height;
+			} else player.parentNode.style.height = globals.height;
 		} else {
 			this.textContent = "mini mode on";
-			player.parentNode.style.height = player.style.height = "25px";
+			player.parentNode.style.height = player.style.height = globals.getHeight(true) + "px";
 			unsafeWindow.onresize = null;
 		}
 	},
