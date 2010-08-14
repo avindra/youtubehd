@@ -61,9 +61,14 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 	optionBox,
 	toggler,
 	globals = {
-		isAs3 : false,
 		getHeight : function(miniMode) {
 			return this.isAs3 ? miniMode ? 35 : 29 : 25
+		},
+		setHeight : function(h) {
+			player.parentNode.style.height = h + "px";
+		},
+		setWidth : function(w) {
+			player.parentNode.style.width = w + "px";
 		}
 	},
 	head=$("watch-headline-title"),
@@ -124,20 +129,20 @@ function center() {
 }
 function fitToWindow() {
 	player.setAttribute("style", "width:" + document.body.offsetWidth + "px!important;");
-	player.parentNode.style.height = (window.innerHeight - 150) + "px";
+	globals.setHeight(window.innerHeight - 150);
 	center();
 }
 function fitBig(force) {
 	var already = (typeof force=="boolean") ? force : !unsafeWindow._hasclass($("baseDiv"), "watch-wide-mode");
 	unsafeWindow.yt.www.watch.player.enableWideScreen(already, true);
 	if (already)
-		player.parentNode.style.height = (window.innerHeight - 150) + "px";
+		globals.setHeight(window.innerHeight - 150);
 	else {
 		player.style.marginLeft="0";
-		player.parentNode.style.width = "640px";
-		player.parentNode.style.height = "385px";
+		globals.setWidth("640");
+		globals.setHeight("385");
 	}
-	player.style.width = Math.round((player.offsetHeight - globals.getHeight()) * (config.IS_WIDESCREEN ? 1.77 : 1.33)) + "px";
+	globals.setWidth(Math.round((player.offsetHeight - globals.getHeight()) * (config.IS_WIDESCREEN ? 1.77 : 1.33)));
 	center();
 }
 // if (player.PercentLoaded()!=100) player.src += "";
@@ -352,7 +357,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 	if (opts.bigMode) fitBig(true);
 	if (opts.min) {
 		fitToWindow();
-		player.style.height = globals.getHeight(true) + "px";
+		globals.setHeight(globals.getHeight(true));
 	} else if (opts.fit) {
 		globals.sizer = setInterval(function() {
 			if(player.getDuration()==0) return;
@@ -362,8 +367,8 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		}, 10);
 		unsafeWindow.onresize = fitToWindow;
 	} else if (opts.true720p && config.IS_HD_AVAILABLE) {
-		player.style.width="1280px";
-		player.style.height="745px";
+		globals.setWidth("1280");
+		globals.setHeight("745");
 		player.style.marginLeft="-160px";
 	}
 	if (opts.useVol && opts.vol.match(/(\d+)/)) player.setVolume(Number(RegExp.$1));
@@ -387,7 +392,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		};
 		player.addEventListener("onPlaybackQualityChange", "newFmt");
 	}
-	globals.height = player.offsetHeight + "px";
+	globals.lastHeight = player.offsetHeight;
 	player.focus();
 };
 if (opts.usecolor) {
@@ -441,7 +446,7 @@ head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
 document.addEventListener("keydown", function(E) {
 	if ("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
 	switch (E.keyCode) {
-		case 83: player.style.height = globals.getHeight(true) + "px"; return;
+		case 83: globals.setHeight(globals.getHeight(true)); return;
 		case 80: player[(player.getPlayerState()==1 ? "pause" : "play") + "Video"](); return;
 		case 82: player.seekTo(0, true); return;
 		case 77: player[player.isMuted() ? "unMute" : "mute"](); return;
@@ -480,10 +485,10 @@ head.appendChild(new Element("a", {
 			if (opts.fit) {
 				unsafeWindow.onresize = fitToWindow;
 				fitToWindow();
-			} else player.parentNode.style.height = globals.height;
+			} else globals.setHeight(globals.lastHeight);
 		} else {
 			this.textContent = "mini mode on";
-			player.parentNode.style.height = player.style.height = globals.getHeight(true) + "px";
+			globals.setHeight(globals.getHeight(true));
 			unsafeWindow.onresize = null;
 		}
 	},
