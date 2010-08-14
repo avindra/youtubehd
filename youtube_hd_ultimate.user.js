@@ -257,8 +257,10 @@ optionBox.appendChild(new Element("a", {
 	onclick : function(E) {
 		E.preventDefault();
 		toggler.textContent="Show Ultimate Options";
-		for (var newOpt=newOpts[i], i=newOpts.length-1; i>=0; --i)
+		for (var newOpt, i=newOpts.length-1; i>=0; --i) {
+			newOpt=newOpts[i];
 			GM_setValue(newOpt.name, newOpt.nodeName=="SELECT" ? newOpt.selectedIndex : newOpt[newOpt.type=="text" ? "value" : "checked"]);
+		}
 		optionBox.style.display="none";
 		refresh();
 	}
@@ -344,10 +346,16 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 	player.setPlaybackQuality(["hd1080", "hd720", "large", "medium", "small"][opts.vq]);
 	if (opts.bigMode) fitBig(true);
 	if (opts.min) {
+		globals.height = player.style.height;
 		fitToWindow();
 		player.style.height = "25px";
 	} else if (opts.fit) {
-		setTimeout(fitToWindow, 500);
+		globals.sizer = setInterval(function() {
+			if(player.getDuration()==0) return;
+			clearInterval(globals.sizer);
+			delete globals.sizer;
+			fitToWindow();
+		}, 10);
 		unsafeWindow.onresize = fitToWindow;
 	} else if (opts.true720p && config.IS_HD_AVAILABLE) {
 		player.style.width="1280px";
