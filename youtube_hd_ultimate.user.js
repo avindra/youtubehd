@@ -79,8 +79,8 @@ var opts = {
 	c2 : new Array("Color 2", "FFFFFF", "The foreground color of the player bar. Must be in HEX format. (Six hex digits only)."),
 	hidenotes : new Array("Hide annotations", true, "Annotations are those annoying notes some users leave that say \"visit my site!\" or \"make sure to watch in HD!!\" in the video. But we already know that, right? You can turn them off if you want."),
 	hideRate : new Array("Hide Warnings", false, "Choose this if you want to hide warnings about language, sex or violence."),
-	fit : new Array("Fit to window", false, "The player will size itself to the window, ensuring optimal screen use in windowed mode."),
 	bigMode : new Array("Big mode", true, "Have a nice monitor? Like seeing things big? Turn this on. Ensures proper aspect ratio, and maximum viewing in the comfort of your browser."),
+	fit : new Array("Fit to window", false, "The player will size itself to the window, ensuring optimal screen use in windowed mode."),
 	min : new Array("Mini mode", false, "For those who use YouTube mainly for music, turn this on. Can also be toggled from the button."),
 	true720p : new Array("True 720p", false, "Turn this on for all HD videos to load in \"true\" 720p. Yeah, it's a pretty lame option on most computers."),
 	useVol : new Array("Enabled Fixed Volume", false, "This will enabled the fixed volume feature (script sets volume to custom amount at the start of every video)."),
@@ -134,8 +134,8 @@ function fitBig(force) {
 		player.parentNode.style.height = (window.innerHeight - 150) + "px";
 	else {
 		player.style.marginLeft="0";
-		player.style.width = "640px";
-		player.style.height = "385px";
+		player.parentNode.style.width = "640px";
+		player.parentNode.style.height = "385px";
 	}
 	player.style.width = Math.round((player.offsetHeight - globals.getHeight()) * (config.IS_WIDESCREEN ? 1.77 : 1.33)) + "px";
 	center();
@@ -264,7 +264,7 @@ optionBox.appendChild(new Element("a", {
 		toggler.textContent="Show Ultimate Options";
 		for (var newOpt, i=newOpts.length-1; i>=0; --i) {
 			newOpt=newOpts[i];
-			GM_setValue(newOpt.name, newOpt.nodeName=="SELECT" ? newOpt.selectedIndex : newOpt[newOpt.type=="text" ? "value" : "checked"]);
+			GM_setValue(newOpt.name, newOpt[newOpt.nodeName=="SELECT" ? "selectedIndex" : newOpt.type=="text" ? "value" : "checked"]);
 		}
 		optionBox.style.display="none";
 		refresh();
@@ -366,7 +366,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		player.style.height="745px";
 		player.style.marginLeft="-160px";
 	}
-	if (opts.useVol && opts.vol.match(/(\d+)/)) player.setVolume(Number(RegExp.$1))
+	if (opts.useVol && opts.vol.match(/(\d+)/)) player.setVolume(Number(RegExp.$1));
 	if (opts.autobuffer) player.pauseVideo();
 	if (player.getAttribute("wmode")!="transparent") return;
 	if (!player.isMuted) {
@@ -569,6 +569,7 @@ globals.attachQLRefresh = function(e) {
 	delete globals.attachQLRefresh;
 };
 el.addEventListener("DOMAttrModified", globals.attachQLRefresh, false);
+unsafeWindow.yt.www.watch.quicklist.toggle();
 }
 }
 function listener() {
