@@ -79,13 +79,12 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 		},
 		handleSize : function(grow) {
 			fitBig(grow);
-			if(grow) {
-				if (grow) {
-					unsafeWindow.onresize = fitToWindow;
-					fitToWindow();
-				} else unsafeWindow.onresize = null;
-			}
-		}
+			if (grow) {
+				unsafeWindow.onresize = fitToWindow;
+				fitToWindow();
+			} else unsafeWindow.onresize = null;
+		},
+		isWide : false
 	},
 	head=$("watch-headline-title"),
 	newOpts = new Array();
@@ -125,15 +124,18 @@ function Element(A, B, C, D) {
 function center() {
 	var psize = player.offsetWidth;
 	if (psize > 960) globals.setMargin(Math.round((960 - psize) / 2) - 1);
-	else if (opts.bigMode && !opts.fit) return;
-	else globals.setMargin("0");
+	else {
+		if(globals.isWide) globals.setMargin("0");
+		else globals.setMargin(Math.round((637 - psize) / 2) - 1);
+	}
 }
 function fitToWindow() {
 	fitBig(true);
 }
 function fitBig(force) {
-	var already = (typeof force=="boolean") ? force : !unsafeWindow._hasclass($("baseDiv"), "watch-wide-mode");
+	var already = (typeof force=="boolean") ? force : !globals.isWide;
 	unsafeWindow.yt.www.watch.player.enableWideScreen(already, true);
+	globals.isWide = already;
 	if (already)
 		globals.setHeight(window.innerHeight - 150);
 	else {
@@ -353,19 +355,12 @@ unsafeWindow.stateChanged=function(state) {
 };
 unsafeWindow.onYouTubePlayerReady=function(A) {
 	player.setPlaybackQuality(["hd1080", "hd720", "large", "medium", "small"][opts.vq]);
-	if (!opts.fit && opts.bigMode) fitBig(true);
+	if (opts.bigMode) fitBig(true);
 	if (opts.min) {
 		fitToWindow();
 		globals.setHeight(globals.getHeight(true));
-	} else if (opts.fit) {
-		globals.sizer = setInterval(function() {
-			if(player.getDuration()==0) return;
-			clearInterval(globals.sizer);
-			delete globals.sizer;
-			fitBig();
-		}, 10);
-		unsafeWindow.onresize = fitToWindow;
-	} else if (opts.true720p && config.IS_HD_AVAILABLE) {
+	} else if (opts.fit) unsafeWindow.onresize = fitToWindow;
+	else if (opts.true720p && config.IS_HD_AVAILABLE) {
 		globals.setWidth("1280");
 		globals.setHeight("745");
 		globals.setMargin("-160");
