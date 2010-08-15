@@ -64,14 +64,17 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 		getHeight : function(miniMode) {
 			return this.isAs3 ? miniMode ? 35 : 29 : 25
 		},
-		setHeight : function(h) {
-			player.parentNode.style.height = h + "px";
+		setStyle : function(s, v) {
+			player.parentNode.style[s] = v + "px";
 		},
-		setWidth : function(w) {
-			player.parentNode.style.width = w + "px";
+		setHeight : function(v) {
+			this.setStyle("height", v);
 		},
-		setMargin : function(m) {
-			player.parentNode.style.marginLeft = m + "px";
+		setWidth : function(v) {
+			this.setStyle("width", v);
+		},
+		setMargin : function(v) {
+			this.setStyle("marginLeft", v);
 		}
 	},
 	head=$("watch-headline-title"),
@@ -97,9 +100,6 @@ var opts = {
 	loop : new Array("Loop", false, "Are you a loopy fanatic? Turn this on! Goes well if you watch a lot of AMV's I hear."),
 	jumpToPlayer : new Array("Jump to player", true, "Especially with big mode on, this is nice. It scrolls down to the video for you.")
 };
-player.style.__defineSetter__("width", function(x) {
-	player.setAttribute("style", "width:" + x + "!important;");
-});
 function Element(A, B, C, D) {
 	A = document.createElement(A);
 	if (B) for (var b in B) {
