@@ -99,7 +99,7 @@ var opts = {
 	bigMode : new Array("Big mode", true, "Have a nice monitor? Like seeing things big? Turn this on. Ensures proper aspect ratio, and maximum viewing in the comfort of your browser."),
 	fit : new Array("Fit to window", false, "The player will size itself to the window, ensuring optimal screen use in windowed mode."),
 	min : new Array("Mini mode", false, "For those who use YouTube mainly for music, turn this on. Can also be toggled from the button."),
-	true720p : new Array("True 720p", false, "Turn this on for all HD videos to load in \"true\" 720p. Yeah, it's a pretty lame option on most computers."),
+	maxLock : new Array("True Resolution", false, "Turn this on to lock videos at their actual maximum resolution, if your monitor supports such enormous resolutions."),
 	useVol : new Array("Enabled Fixed Volume", false, "This will enabled the fixed volume feature (script sets volume to custom amount at the start of every video)."),
 	vol : new Array("Volume", "50", "The volume, as an integer, from 0 to 100."),
 	snapBack : new Array("Snap back", true, "Makes the video smaller if you turn off HD/HQ mid-video using the player's button."),
@@ -129,7 +129,19 @@ function fitToWindow() {
 function fitBig(force) {
 	globals.isWide = (typeof force=="boolean") ? force : !globals.isWide;
 	unsafeWindow.yt.www.watch.player.enableWideScreen(globals.isWide, true);
-	globals.setHeight(globals.isWide ? window.innerHeight - 150 : "385");
+	if(globals.isWide) {
+		var h = window.innerHeight - 150;
+		if(opts.maxLock) {
+			var max;
+			switch(player.getPlaybackQuality()) {
+				case "hd1080" : max = 1080; break;
+				case "hd720" : max = 720; break;
+			}
+			max += globals.getHeight();
+			if(h > max) h = max;
+		}
+		globals.setHeight(h);
+	} else globals.setHeight("385");
 	globals.setWidth(Math.round((player.offsetHeight - globals.getHeight()) * (config.IS_WIDESCREEN ? 1.77 : 1.33)));
 	center();
 }
@@ -326,7 +338,7 @@ $("masthead-nav").appendChild(toggler=new Element("a", {
 		refresh();
 	}
 }));
-if (!opts.bigMode && (opts.fit || opts.true720p)) opts.bigMode = true;
+if (!opts.bigMode && opts.fit) opts.bigMode = true;
 head.addEventListener("click", function() {
 	this.scrollIntoView(true);
 	refresh();
@@ -347,11 +359,6 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		fitToWindow();
 		globals.setHeight(globals.getHeight(true));
 	} else if (opts.fit) unsafeWindow.onresize = fitToWindow;
-	else if (opts.true720p && config.IS_HD_AVAILABLE) {
-		globals.setWidth("1280");
-		globals.setHeight("745");
-		globals.setMargin("-160");
-	}
 	if (opts.useVol && opts.vol.match(/(\d+)/)) player.setVolume(Number(RegExp.$1));
 	if (opts.autobuffer) player.pauseVideo();
 	if (player.getAttribute("wmode")!="transparent") return;
