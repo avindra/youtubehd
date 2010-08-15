@@ -104,7 +104,9 @@ var opts = {
 	vol : new Array("Volume", "50", "The volume, as an integer, from 0 to 100."),
 	snapBack : new Array("Snap back", true, "Makes the video smaller if you turn off HD/HQ mid-video using the player's button."),
 	loop : new Array("Loop", false, "Are you a loopy fanatic? Turn this on! Goes well if you watch a lot of AMV's I hear."),
-	jumpToPlayer : new Array("Jump to player", true, "Especially with big mode on, this is nice. It scrolls down to the video for you.")
+	jumpToPlayer : new Array("Jump to player", true, "Especially with big mode on, this is nice. It scrolls down to the video for you."),
+	tools : new Array("Script tools", true, "Display the script toolbox to the right of the video title."),
+	qlKill : new Array("Kill Quicklist", false, "Permanently removes the quicklist from view. Not recommended if you use playlists.")
 };
 function Element(A, B, C, D) {
 	A = document.createElement(A);
@@ -451,6 +453,7 @@ document.addEventListener("keydown", function(E) {
 				return;
 		}
 }, false);
+if(opts.tools) {
 head.appendChild(new Element("span", {
 	className : "loop o" + (opts.loop ? "n" : "ff"),
 	style : "padding-left:2px;padding-right:2px;",
@@ -477,6 +480,7 @@ head.appendChild(new Element("a", {
 	},
 	textContent : "mini mode o" + (opts.min ? "n" : "ff")
 }));
+}
 var mnuActions;
 var watch=$("watch-actions");
 $("watch-actions-right").appendChild(
@@ -550,14 +554,18 @@ for (var dl in downloads) {
 $("watch-info").appendChild(block);
 var el = $("quicklist");
 if (el) {
-globals.attachQLRefresh = function(e) {
-	if (this.getAttribute("data-loaded-active")!="true") return;
-	this.addEventListener("DOMAttrModified", refresh, false);
-	this.removeEventListener("DOMAttrModified", globals.attachQLRefresh, false);
-	delete globals.attachQLRefresh;
-};
-el.addEventListener("DOMAttrModified", globals.attachQLRefresh, false);
-unsafeWindow.yt.www.watch.quicklist.toggle();
+if(opts.qlKill) {
+	el.style.display = "none";
+} else {
+	globals.attachQLRefresh = function(e) {
+		if (this.getAttribute("data-loaded-active")!="true") return;
+		this.addEventListener("DOMAttrModified", refresh, false);
+		this.removeEventListener("DOMAttrModified", globals.attachQLRefresh, false);
+		delete globals.attachQLRefresh;
+	};
+	el.addEventListener("DOMAttrModified", globals.attachQLRefresh, false);
+	unsafeWindow.yt.www.watch.quicklist.toggle();
+}
 }
 }
 function listener() {
