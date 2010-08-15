@@ -338,7 +338,7 @@ $("masthead-nav").appendChild(toggler=new Element("a", {
 		refresh();
 	}
 }));
-if (!opts.bigMode && opts.fit) opts.bigMode = true;
+if (!opts.bigMode && (opts.maxLock || opts.fit)) opts.bigMode = true;
 head.addEventListener("click", function() {
 	this.scrollIntoView(true);
 	refresh();
