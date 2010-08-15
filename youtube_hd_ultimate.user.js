@@ -79,12 +79,7 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 		},
 		handleSize : function(grow) {
 			fitBig(grow);
-			if (grow) {
-				if (opts.fit) {
-					unsafeWindow.onresize = fitToWindow;
-					fitToWindow();
-				}
-			} else unsafeWindow.onresize = null;
+			unsafeWindow.onresize = grow && opts.fit ? fitToWindow : null;
 		},
 		isWide : false
 	},
@@ -132,16 +127,9 @@ function fitToWindow() {
 	fitBig(true);
 }
 function fitBig(force) {
-	var already = (typeof force=="boolean") ? force : !globals.isWide;
-	unsafeWindow.yt.www.watch.player.enableWideScreen(already, true);
-	globals.isWide = already;
-	if (already)
-		globals.setHeight(window.innerHeight - 150);
-	else {
-		globals.setMargin("0");
-		globals.setWidth("640");
-		globals.setHeight("385");
-	}
+	globals.isWide = (typeof force=="boolean") ? force : !globals.isWide;
+	unsafeWindow.yt.www.watch.player.enableWideScreen(globals.isWide, true);
+	globals.setHeight(globals.isWide ? window.innerHeight - 150 : "385");
 	globals.setWidth(Math.round((player.offsetHeight - globals.getHeight()) * (config.IS_WIDESCREEN ? 1.77 : 1.33)));
 	center();
 }
@@ -376,7 +364,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 	player.addEventListener("SIZE_CLICKED", "yt.www.watch.player.onPlayerSizeClicked");
 	if (opts.snapBack) {
 		unsafeWindow.newFmt=function(fmt) {
-			globals.handleSize(/hd(?:72|108)0|large/.test(fmt));
+			if(player.getPlaybackQuality()!=fmt) globals.handleSize(/hd(?:72|108)0|large/.test(fmt));
 		};
 		player.addEventListener("onPlaybackQualityChange", "newFmt");
 	}
