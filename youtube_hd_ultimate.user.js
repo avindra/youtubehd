@@ -74,7 +74,17 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 			this.setStyle("width", v);
 		},
 		setMargin : function(v) {
-			this.setStyle("marginLeft", v);
+			if(v == "0") player.parentNode.style.removeProperty("margin-left");
+			else this.setStyle("marginLeft", v);
+		},
+		handleSize : function(grow) {
+			fitBig(grow);
+			if(grow) {
+				if (grow) {
+					unsafeWindow.onresize = fitToWindow;
+					fitToWindow();
+				} else unsafeWindow.onresize = null;
+			}
 		}
 	},
 	head=$("watch-headline-title"),
@@ -116,15 +126,10 @@ function center() {
 	var psize = player.offsetWidth;
 	if (psize > 960) globals.setMargin(Math.round((960 - psize) / 2) - 1);
 	else if (opts.bigMode && !opts.fit) return;
-	else {
-		globals.setMargin("0");
-		globals.setMargin(-1 * (player.offsetLeft + player.parentNode.offsetLeft));
-	}
+	else globals.setMargin("0");
 }
 function fitToWindow() {
-	player.setAttribute("style", "width:" + document.body.offsetWidth + "px!important;");
-	globals.setHeight(window.innerHeight - 150);
-	center();
+	fitBig(true);
 }
 function fitBig(force) {
 	var already = (typeof force=="boolean") ? force : !unsafeWindow._hasclass($("baseDiv"), "watch-wide-mode");
@@ -348,7 +353,7 @@ unsafeWindow.stateChanged=function(state) {
 };
 unsafeWindow.onYouTubePlayerReady=function(A) {
 	player.setPlaybackQuality(["hd1080", "hd720", "large", "medium", "small"][opts.vq]);
-	if (opts.bigMode) fitBig(true);
+	if (!opts.fit && opts.bigMode) fitBig(true);
 	if (opts.min) {
 		fitToWindow();
 		globals.setHeight(globals.getHeight(true));
@@ -357,7 +362,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 			if(player.getDuration()==0) return;
 			clearInterval(globals.sizer);
 			delete globals.sizer;
-			fitToWindow();
+			fitBig();
 		}, 10);
 		unsafeWindow.onresize = fitToWindow;
 	} else if (opts.true720p && config.IS_HD_AVAILABLE) {
@@ -372,17 +377,12 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		player.data += "";
 		return;
 	}
+	unsafeWindow.yt.www.watch.player.onPlayerSizeClicked = globals.handleSize;
 	player.addEventListener("onStateChange", "stateChanged");
+	player.addEventListener("SIZE_CLICKED", "yt.www.watch.player.onPlayerSizeClicked");
 	if (opts.snapBack) {
 		unsafeWindow.newFmt=function(fmt) {
-			var isBig = /hd(?:72|108)0|large/.test(fmt);
-			fitBig(isBig);
-			if (isBig) {
-				if (opts.fit) {
-					unsafeWindow.onresize = fitToWindow;
-					fitToWindow();
-				}
-			} else unsafeWindow.onresize = null;
+			globals.handleSize(/hd(?:72|108)0|large/.test(fmt));
 		};
 		player.addEventListener("onPlaybackQualityChange", "newFmt");
 	}
