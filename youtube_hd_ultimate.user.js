@@ -80,8 +80,10 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 		handleSize : function(grow) {
 			fitBig(grow);
 			if (grow) {
-				unsafeWindow.onresize = fitToWindow;
-				fitToWindow();
+				if (opts.fit) {
+					unsafeWindow.onresize = fitToWindow;
+					fitToWindow();
+				}
 			} else unsafeWindow.onresize = null;
 		},
 		isWide : false
@@ -124,10 +126,7 @@ function Element(A, B, C, D) {
 function center() {
 	var psize = player.offsetWidth;
 	if (psize > 960) globals.setMargin(Math.round((960 - psize) / 2) - 1);
-	else {
-		if(globals.isWide) globals.setMargin("0");
-		else globals.setMargin(Math.round((637 - psize) / 2) - 1);
-	}
+	else globals.setMargin(globals.isWide ? "0" : Math.round((637 - psize) / 2) - 1);
 }
 function fitToWindow() {
 	fitBig(true);
