@@ -362,7 +362,6 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 			player.playVideo();
 			unsafeWindow.removeEventListener("focus", playVideo, false);
 			unsafeWindow.removeEventListener("mousemove", playVideo, false);
-			unsafeWindow.removeEventListener("blur", blurPage, false);
 		}
 		unsafeWindow.addEventListener("focus", playVideo, false);
 		unsafeWindow.addEventListener("mousemove", playVideo, false);
