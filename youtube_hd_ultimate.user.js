@@ -185,8 +185,6 @@ width:1px!important;height:1px!important;\
 	z-index : 100000;\
 } #myLinks {\
 	float : right;\
-	margin-top : -421px;\
-	margin-right: 17px;\
 	font-size: 16px;\
 } #myLinks a {\
 	color : white;\
@@ -220,6 +218,9 @@ optionBox = new Element("div", {
 	style : "display : none",
 	id : "opts"
 });
+optionBox = optionBox.appendChild(new Element("div", {
+	style : "float:left"
+}));
 for (var opt in opts) {
 	var val = GM_getValue(opt), full = opts[opt][1], a, s=document.createElement("label"), append = true;
 	if (val == null) {
@@ -263,6 +264,16 @@ for (var opt in opts) {
 	opts[opt]=val;
 	newOpts.push(a);
 }
+optionBox = optionBox.parentNode;
+var linkbox;
+optionBox.appendChild(linkbox=new Element("div",
+	{
+		id : "myLinks"
+	}, new Array(
+		document.createTextNode("Script links: ")
+	)
+));
+optionBox.appendChild(new Element("br", {style : "clear:both"}));
 optionBox.appendChild(new Element("a", {
 	className : "yt-button yt-button-primary",
 	style : "float:right;margin-top:-25px;",
@@ -280,14 +291,6 @@ optionBox.appendChild(new Element("a", {
 		new Element("span", {
 			textContent : "Save Options"
 		})
-	)
-));
-var linkbox;
-optionBox.appendChild(linkbox=new Element("span",
-	{
-		id : "myLinks"
-	}, new Array(
-		document.createTextNode("Script links: ")
 	)
 ));
 var sLinks = {
