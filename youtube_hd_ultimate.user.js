@@ -4,12 +4,9 @@
 // @include       http://www.youtube.com/watch*
 // @include       http://youtube.com/watch*
 // @namespace     #aVg
-// @license       CC-BY-NC-ND http://creativecommons.org/licenses/by-nc-nd/3.0/
+// @license       CC-BY-NC http://creativecommons.org/licenses/by-nc/3.0/
 // @version       1.2.3
 // ==/UserScript==
-// Do not fiddle with the script for any reason! If you're having problems, use the various contact options!
-// This entire script is licensed under the license listed above. If you want to add a feature to it,
-// request the feature. If you supply the code, I will give you attribution if you so desire.
 function Params(A) {
 	var obj = {};
 	for (var i = 0, isProp = true, cur, curProp = "", curValue = ""; i < A.length; ++i) {
