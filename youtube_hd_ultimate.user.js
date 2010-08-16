@@ -5,7 +5,7 @@
 // @include       http://youtube.com/watch*
 // @namespace     #aVg
 // @license       CC-BY-NC-ND http://creativecommons.org/licenses/by-nc-nd/3.0/
-// @version       1.2.2
+// @version       1.2.3
 // ==/UserScript==
 // Do not fiddle with the script for any reason! If you're having problems, use the various contact options!
 // This entire script is licensed under the license listed above. If you want to add a feature to it,
@@ -32,7 +32,7 @@ function Params(A) {
 	return obj;
 }
 function $(A) {return document.getElementById(A);}
-const thisVer="1.2.2";
+const thisVer="1.2.3";
 function script() {
 function refresh() {
 	var pos = window.scrollY;
@@ -72,10 +72,6 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 		},
 		setWidth : function(v) {
 			this.setStyle("width", v);
-		},
-		setMargin : function(v) {
-			if(v == "0") player.parentNode.style.removeProperty("margin-left");
-			else this.setStyle("marginLeft", v);
 		},
 		handleSize : function(grow) {
 			fitBig(grow);
@@ -122,8 +118,11 @@ function Element(A, B, C, D) {
 }
 function center() {
 	var psize = player.offsetWidth;
-	if (psize > 960) globals.setMargin(Math.round((960 - psize) / 2) - 1);
-	else globals.setMargin(globals.isWide ? "0" : Math.round((637 - psize) / 2) - 1);
+	if (psize > 960) globals.setStyle("marginLeft", Math.round((960 - psize) / 2) - 1);
+	else {
+		if(globals.isWide) player.parentNode.style.removeProperty("margin-left");
+		else globals.setStyle("marginLeft", Math.round((637 - psize) / 2) - 1);
+	}
 }
 function fitToWindow() {
 	fitBig(true);
