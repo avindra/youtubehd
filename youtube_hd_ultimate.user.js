@@ -577,8 +577,6 @@ if(opts.qlKill) {
 	unsafeWindow.yt.www.watch.quicklist.toggle();
 }
 }
-var c = $("content");
-if(c.style.background) c.style.background = "none";
 }
 function listener() {
 	setTimeout(script, 1000);
