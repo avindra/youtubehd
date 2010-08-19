@@ -376,9 +376,11 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		player.data += "";
 		return;
 	}
-	unsafeWindow.yt.www.watch.player.onPlayerSizeClicked = globals.handleSize;
+	unsafeWindow.sizeClicked = globals.handleSize;
 	player.addEventListener("onStateChange", "stateChanged");
-	player.addEventListener("SIZE_CLICKED", "yt.www.watch.player.onPlayerSizeClicked");
+	player.addEventListener("SIZE_CLICKED", "sizeClicked");
+	player.addEventListener("NEXT_CLICKED", "yt.www.watch.player.onPlayerNextClicked");
+	player.addEventListener("NEXT_SELECTED", "yt.www.watch.player.onPlayerNextSelected");
 	if (opts.snapBack) {
 		unsafeWindow.newFmt=function(fmt) {
 			if(player.getPlaybackQuality()!=fmt) globals.handleSize(/hd(?:72|108)0|large/.test(fmt));
@@ -575,6 +577,8 @@ if(opts.qlKill) {
 	unsafeWindow.yt.www.watch.quicklist.toggle();
 }
 }
+var c = $("content");
+if(c.style.background) c.style.background = "none";
 }
 function listener() {
 	setTimeout(script, 1000);
