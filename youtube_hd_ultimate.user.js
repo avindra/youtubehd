@@ -271,8 +271,8 @@ optionBox.appendChild(linkbox=new Element("div",
 ));
 optionBox.appendChild(new Element("br", {style : "clear:both"}));
 optionBox.appendChild(new Element("a", {
-	className : "yt-button yt-button-primary",
-	style : "float:right;margin-top:-25px;",
+	className : "yt-uix-button",
+	style : "float: right; height: 20px; padding-top: 3px; margin-top: -25px; color: black;",
 	onclick : function(E) {
 		E.preventDefault();
 		toggler.textContent="Show Ultimate Options";
