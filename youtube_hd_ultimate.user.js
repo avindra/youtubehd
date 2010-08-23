@@ -354,6 +354,12 @@ unsafeWindow.stateChanged=function(state) {
 	}
 };
 unsafeWindow.onYouTubePlayerReady=function(A) {
+	var start=0;
+	if (location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
+		if (RegExp.$1) start += Number(RegExp.$1 + "0") * 6;
+		if (RegExp.$2) start += Number(RegExp.$2);
+		player.seekTo(start, true);
+	}
 	if(!opts.autobuffer) {
 		function playVideo() {
 			player.playVideo();
@@ -363,7 +369,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		unsafeWindow.addEventListener("focus", playVideo, false);
 		unsafeWindow.addEventListener("mousemove", playVideo, false);
 	}
-	player.pauseVideo();
+	if(start != 0) player.pauseVideo();
 	player.setPlaybackQuality(["hd1080", "hd720", "large", "medium", "small"][opts.vq]);
 	if (opts.bigMode) fitBig(true);
 	if (opts.min) {
@@ -398,12 +404,6 @@ if (opts.hidenotes) swfArgs.iv_load_policy="3";
 if (config.LIST_AUTO_PLAY_ON) swfArgs.playnext = "1";
 if (!opts.autoplay && !opts.autobuffer) swfArgs.autoplay="0";
 else if (opts.autoplay) swfArgs.autoplay="1";
-if (location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
-	var start=0;
-	if (RegExp.$1) start += Number(RegExp.$1 + "0") * 6;
-	if (RegExp.$2) start += Number(RegExp.$2);
-	swfArgs.start = start;
-}
 var ads=new Array("infringe", "invideo", "ctb", "interstitial", "watermark");
 if (opts.hideRate) {
 	ads.push("ratings");
