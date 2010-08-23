@@ -4,7 +4,7 @@
 // @include       http://www.youtube.com/watch*
 // @include       http://youtube.com/watch*
 // @namespace     #aVg
-// @license       CC-BY-NC http://creativecommons.org/licenses/by-nc/3.0/
+// @license       CC-BY-NC-SA http://creativecommons.org/licenses/by-nc-sa/3.0/
 // @version       1.2.3
 // ==/UserScript==
 function Params(A) {
@@ -398,11 +398,10 @@ if (opts.hidenotes) swfArgs.iv_load_policy="3";
 if (config.LIST_AUTO_PLAY_ON) swfArgs.playnext = "1";
 if (!opts.autoplay && !opts.autobuffer) swfArgs.autoplay="0";
 else if (opts.autoplay) swfArgs.autoplay="1";
-if (location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s)?(\d*)/)) {
+if (location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
 	var start=0;
 	if (RegExp.$1) start += Number(RegExp.$1 + "0") * 6;
 	if (RegExp.$2) start += Number(RegExp.$2);
-	if (RegExp.$3) start += Number(RegExp.$3);
 	swfArgs.start = start;
 }
 var ads=new Array("infringe", "invideo", "ctb", "interstitial", "watermark");
