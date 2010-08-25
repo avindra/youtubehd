@@ -54,7 +54,7 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 	toggler,
 	globals = {
 		getHeight : function(miniMode) {
-			return this.isAs3 ? miniMode ? 35 : 29 : 25
+			return miniMode ? 35 : 29;
 		},
 		setStyle : function(s, v) {
 			player.parentNode.style[s] = v + "px";
@@ -76,12 +76,8 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 document.title = document.title.substring(10);
 var opts = {
 	vq : new Array("Max Quality", new Array("240p", "360p", "480p", "720p", "1080p"), "Please choose the maximum video quality your computer can handle."),
-	player : new Array("Player", new Array("v8", "v9as2", "Latest"), "Choose which player you prefer using."),
 	autoplay : new Array("Autoplay", true, "By default, YouTube autoplays all of it's videos."),
 	autobuffer : new Array("Autobuffer", false, "If you have a slow computer and/or a slow connection, turn this on to let the video download while it's paused, then you can hit the play button."),
-	usecolor : new Array("Enable colors", true, "Choose this option if you want to enable custom colors. Colors only work in the old players."),
-	c1 : new Array("Color 1", "000000", "The background color of the player bar. Must be in HEX format. (Six hex digits only)."),
-	c2 : new Array("Color 2", "FFFFFF", "The foreground color of the player bar. Must be in HEX format. (Six hex digits only)."),
 	hidenotes : new Array("Hide annotations", true, "Annotations are those annoying notes some users leave that say \"visit my site!\" or \"make sure to watch in HD!!\" in the video. But we already know that, right? You can turn them off if you want."),
 	hideRate : new Array("Hide Warnings", false, "Choose this if you want to hide warnings about language, sex or violence."),
 	bigMode : new Array("Big mode", true, "Have a nice monitor? Like seeing things big? Turn this on. Ensures proper aspect ratio, and maximum viewing in the comfort of your browser."),
@@ -381,10 +377,6 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 	globals.lastHeight = player.offsetHeight;
 	player.focus();
 };
-if (opts.usecolor) {
-	swfArgs.color1=opts.c1;
-	swfArgs.color2=opts.c2;
-}
 if (opts.hidenotes) swfArgs.iv_load_policy="3";
 if (config.LIST_AUTO_PLAY_ON) swfArgs.playnext = "1";
 if (!opts.autoplay && !opts.autobuffer) swfArgs.autoplay="0";
@@ -419,8 +411,7 @@ var vars="";
 for (var arg in swfArgs) if (!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
 player.setAttribute("flashvars", vars);
 player.setAttribute("wmode", "opaque");
-player.src = config.SWF_CONFIG["url" + new Array("", "_v8", "_v9as2")[opts.player]];
-globals.isAs3 = player.src.indexOf("as3") != -1;
+player.src = purl;
 head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
 document.addEventListener("keydown", function(E) {
 	if ("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
@@ -549,12 +540,44 @@ $("watch-info").appendChild(block);
 var el = $("quicklist");
 if (el) {
 if(opts.qlKill) el.style.display = "none";
-else unsafeWindow.yt.www.watch.quicklist.toggle();
+else setTimeout(unsafeWindow.yt.www.watch.quicklist.toggle, 1000);
 }
 }
-function listener() {
-	setTimeout(script, 1000);
-	$("content").removeEventListener("DOMNodeInserted", listener, false);
+
+function init() {
+	function listener() {
+		setTimeout(script, 1000);
+		$("content").removeEventListener("DOMNodeInserted", listener, false);
+	}
+	if ($("watch-headline-title")) script();
+	else $("content").addEventListener("DOMNodeInserted", listener, false);
 }
-if ($("watch-headline-title")) script();
-else $("content").addEventListener("DOMNodeInserted", listener, false);
+
+function getPurl() {
+	GM_xmlhttpRequest({
+		url : "http://www.youtube.com/watch?v=-AIwkpCH1yA",
+		method : "GET",
+		onload : function(A) {
+			if(A.responseText.match(/<param name=\\"movie\\" value=\\"([^"]+)/))
+			{
+				purl = RegExp.$1.replace(/\\/g, "");
+				GM_setValue("purl", purl);
+				init();
+			} else alert("Massive script init error!\n\nIf you feel this is a mistake on my part, please let me know: http://userscripts.org/scripts/show/31864");
+		}
+	});
+}
+var purl = unsafeWindow.yt.config_.SWF_CONFIG.url;
+if (purl.indexOf("as3")==-1) {
+	purl = GM_getValue("purl");
+	if (purl == null) getPurl();
+	else GM_xmlhttpRequest({
+		url : purl,
+		method : "HEAD",
+		onload : function(A)
+		{
+			if(A.status == 200) init();
+			else getPurl();
+		}
+	});
+} else init();
