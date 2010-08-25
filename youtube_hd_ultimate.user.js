@@ -134,7 +134,6 @@ function fitBig(force) {
 	globals.setWidth(Math.round((player.offsetHeight - globals.getHeight()) * (config.IS_WIDESCREEN ? 1.77 : 1.32)));
 	center();
 }
-// if (player.PercentLoaded()!=100) player.src += "";
 GM_addStyle("#vidtools > * {\
 	position : relative;\
 	z-index : 6 !important;\
