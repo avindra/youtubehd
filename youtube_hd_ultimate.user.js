@@ -32,6 +32,7 @@ function $(A) {return document.getElementById(A);}
 const thisVer="1.2.3";
 function script() {
 function redraw() {
+	if(globals.isAs3) return;
 	var pos = window.scrollY;
 	window.scroll(0, pos + 1);
 	window.scroll(0, pos);
@@ -377,7 +378,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		globals.setHeight(globals.getHeight(true));
 	} else if (opts.fit) unsafeWindow.onresize = fitToWindow;
 	if (opts.useVol && opts.vol.match(/(\d+)/)) player.setVolume(Number(RegExp.$1));
-	if (player.getAttribute("wmode")!="transparent") return;
+	if (player.getAttribute("wmode")!="opaque") return;
 	if (!player.isMuted) {
 		player.data += "";
 		return;
@@ -433,7 +434,7 @@ else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|3[457])\/
 var vars="";
 for (var arg in swfArgs) if (!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
 player.setAttribute("flashvars", vars);
-player.setAttribute("wmode", "transparent");
+player.setAttribute("wmode", "opaque");
 player.src = config.SWF_CONFIG["url" + new Array("", "_v8", "_v9as2")[opts.player]];
 globals.isAs3 = player.src.indexOf("as3") != -1;
 head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
