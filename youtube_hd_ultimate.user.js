@@ -343,6 +343,7 @@ unsafeWindow.stateChanged=function(state) {
 	}
 };
 unsafeWindow.onYouTubePlayerReady=function(A) {
+	if (player.getAttribute("wmode")!="opaque") return;
 	var start=0;
 	if (location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
 		if (RegExp.$1) start += Number(RegExp.$1 + "0") * 6;
@@ -366,11 +367,6 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		globals.setHeight(globals.getHeight(true));
 	} else if (opts.fit) unsafeWindow.onresize = fitToWindow;
 	if (opts.useVol && opts.vol.match(/(\d+)/)) player.setVolume(Number(RegExp.$1));
-	if (player.getAttribute("wmode")!="opaque") return;
-	if (!player.isMuted) {
-		player.data += "";
-		return;
-	}
 	unsafeWindow.sizeClicked = globals.handleSize;
 	player.addEventListener("onStateChange", "stateChanged");
 	player.addEventListener("SIZE_CLICKED", "sizeClicked");
