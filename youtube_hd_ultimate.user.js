@@ -341,12 +341,7 @@ unsafeWindow.stateChanged=function(state) {
 };
 unsafeWindow.onYouTubePlayerReady=function(A) {
 	if (player.getAttribute("wmode")!="opaque") return;
-	var start=0;
-	if (location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
-		if (RegExp.$1) start += Number(RegExp.$1 + "0") * 6;
-		if (RegExp.$2) start += Number(RegExp.$2);
-		player.seekTo(start, true);
-	}
+	player.setPlaybackQuality(["hd1080", "hd720", "large", "medium", "small"][opts.vq]);
 	if(!opts.autobuffer) {
 		function playVideo() {
 			player.playVideo();
@@ -362,7 +357,6 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		if(opts.qlKill) el.style.display = "none";
 		else el.setAttribute("data-autohide-mode", "on");
 	}
-	player.setPlaybackQuality(["hd1080", "hd720", "large", "medium", "small"][opts.vq]);
 	if (opts.bigMode) fitBig(true);
 	if (opts.min) {
 		fitToWindow();
@@ -412,6 +406,12 @@ else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|3[457])\/
 	swfArgs.fmt_list = "18/" + (RegExp.$1=="0" ? "512000" : "640x360") + "/9/0/115," + swfArgs.fmt_list;
 	swfArgs.fmt_map = swfArgs.fmt_list;
 	swfArgs.fmt_url_map = swfArgs.fmt_stream_map.replace(/\|\|tc\.v\d+\.cache\d+\.c\.youtube\.com/g, "");
+}
+var start=0;
+if (location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
+	if (RegExp.$1) start += Number(RegExp.$1 + "0") * 6;
+	if (RegExp.$2) start += Number(RegExp.$2);
+	swfArgs.start = start;
 }
 var vars="";
 for (var arg in swfArgs) if (!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
