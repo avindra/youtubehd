@@ -31,12 +31,6 @@ function Params(A) {
 function $(A) {return document.getElementById(A);}
 const thisVer="1.2.3";
 function script() {
-function redraw() {
-	if(globals.isAs3) return;
-	var pos = window.scrollY;
-	window.scroll(0, pos + 1);
-	window.scroll(0, pos);
-}
 function update(resp) {
 	GM_xmlhttpRequest({
 		url : "http://userscripts.org/scripts/source/31864.meta.js",
@@ -227,7 +221,6 @@ for (var opt in opts) {
 	switch (typeof val) {
 		case "string" :
 		a = document.createElement("input");
-		a.addEventListener("keyup", redraw, false);
 		a.value = val;
 		break;
 		case "boolean" :
@@ -249,8 +242,6 @@ for (var opt in opts) {
 		a.selectedIndex = val;
 		break;
 	}
-	optionBox.addEventListener("keydown", redraw, false);
-	a.addEventListener("click", redraw, false);
 	a.name = opt;
 	if (append) {
 		s.appendChild(document.createTextNode(opts[opt][0]));
@@ -282,7 +273,6 @@ optionBox.appendChild(new Element("a", {
 			GM_setValue(newOpt.name, newOpt[newOpt.nodeName=="SELECT" ? "selectedIndex" : newOpt.type=="text" ? "value" : "checked"]);
 		}
 		optionBox.style.display="none";
-		redraw();
 	}
 	}, new Array(
 		new Element("span", {
@@ -337,13 +327,11 @@ $("masthead-nav").appendChild(toggler=new Element("a", {
 		var isHidden = optionBox.style.display=="none";
 		this.textContent= (isHidden ? "Hide" : "Show") + " Ultimate Options";
 		optionBox.style.display=isHidden ? "inline" : "none";
-		redraw();
 	}
 }));
 if (!opts.bigMode && (opts.maxLock || opts.fit)) opts.bigMode = true;
 head.addEventListener("click", function() {
 	this.scrollIntoView(true);
-	redraw();
 }, false);
 if (opts.jumpToPlayer) head.scrollIntoView(true);
 unsafeWindow.stateChanged=function(state) {
@@ -564,18 +552,8 @@ for (var dl in downloads) {
 $("watch-info").appendChild(block);
 var el = $("quicklist");
 if (el) {
-if(opts.qlKill) {
-	el.style.display = "none";
-} else {
-	globals.attachQLRefresh = function(e) {
-		if (this.getAttribute("data-loaded-active")!="true") return;
-		this.addEventListener("DOMAttrModified", redraw, false);
-		this.removeEventListener("DOMAttrModified", globals.attachQLRefresh, false);
-		delete globals.attachQLRefresh;
-	};
-	el.addEventListener("DOMAttrModified", globals.attachQLRefresh, false);
-	unsafeWindow.yt.www.watch.quicklist.toggle();
-}
+if(opts.qlKill) el.style.display = "none";
+else unsafeWindow.yt.www.watch.quicklist.toggle();
 }
 }
 function listener() {
