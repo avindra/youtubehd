@@ -311,7 +311,7 @@ linkbox.appendChild(new Element("a", {
 		opts.swfArgs = swfArgs;
 		opts.ver = thisVer;
 		opts.ua = navigator.userAgent;
-		opts.flash = navigator.plugins["Shockwave Flash"].description;
+		opts.flash = unsafeWindow.navigator.plugins["Shockwave Flash"].description;
 		prompt("Here is your debugString:", opts.toSource());
 	}
 }));
@@ -357,6 +357,11 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		unsafeWindow.addEventListener("mousemove", playVideo, false);
 	}
 	if(start != 0) player.pauseVideo();
+	var el = $("quicklist");
+	if (el) {
+		if(opts.qlKill) el.style.display = "none";
+		else el.setAttribute("data-autohide-mode", "on");
+	}
 	player.setPlaybackQuality(["hd1080", "hd720", "large", "medium", "small"][opts.vq]);
 	if (opts.bigMode) fitBig(true);
 	if (opts.min) {
@@ -538,11 +543,6 @@ for (var dl in downloads) {
 	block.appendChild(temp);
 }
 $("watch-info").appendChild(block);
-var el = $("quicklist");
-if (el) {
-if(opts.qlKill) el.style.display = "none";
-else setTimeout(unsafeWindow.yt.www.watch.quicklist.toggle, 1000);
-}
 }
 
 function init() {
