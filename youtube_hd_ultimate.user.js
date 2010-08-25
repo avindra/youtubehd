@@ -311,6 +311,7 @@ linkbox.appendChild(new Element("a", {
 		opts.swfArgs = swfArgs;
 		opts.ver = thisVer;
 		opts.ua = navigator.userAgent;
+		opts.flash = navigator.plugins["Shockwave Flash"].description;
 		prompt("Here is your debugString:", opts.toSource());
 	}
 }));
