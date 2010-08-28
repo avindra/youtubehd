@@ -49,7 +49,7 @@ if ((GM_getValue("lastCheck"), now) <= (now - 86400000)) {
 	update(false);
 }
 var player=unsafeWindow.document.getElementById("movie_player"),
-	config = unsafeWindow.yt.config_, swfArgs = new Params(player.getAttribute("flashvars")),
+	swfArgs = new Params(player.getAttribute("flashvars")),
 	optionBox,
 	toggler,
 	globals = {
@@ -81,7 +81,7 @@ var opts = {
 	hidenotes : new Array("Hide annotations", true, "Annotations are those annoying notes some users leave that say \"visit my site!\" or \"make sure to watch in HD!!\" in the video. But we already know that, right? You can turn them off if you want."),
 	hideRate : new Array("Hide Warnings", false, "Choose this if you want to hide warnings about language, sex or violence."),
 	bigMode : new Array("Big mode", true, "Have a nice monitor? Like seeing things big? Turn this on. Ensures proper aspect ratio, and maximum viewing in the comfort of your browser."),
-	fit : new Array("Fit to window", false, "The player will size itself to the window, ensuring optimal screen use in windowed mode."),
+	fit : new Array("Fit to window", true, "The player will size itself to the window, ensuring optimal screen use in windowed mode."),
 	min : new Array("Mini mode", false, "For those who use YouTube mainly for music, turn this on. Can also be toggled from the button."),
 	maxLock : new Array("True Resolution", false, "Turn this on to lock videos at their actual maximum resolution, if your monitor supports such enormous resolutions."),
 	useVol : new Array("Enabled Fixed Volume", false, "This will enabled the fixed volume feature (script sets volume to custom amount at the start of every video)."),
@@ -543,15 +543,7 @@ for (var dl in downloads) {
 }
 $("watch-info").appendChild(block);
 }
-
-function init() {
-	function listener() {
-		setTimeout(script, 1000);
-		$("content").removeEventListener("DOMNodeInserted", listener, false);
-	}
-	if ($("watch-headline-title")) script();
-	else $("content").addEventListener("DOMNodeInserted", listener, false);
-}
+if (!$("watch-headline-title")) location.replace(location.href.replace("#!", "?"));
 
 function getPurl() {
 	GM_xmlhttpRequest({
@@ -562,12 +554,13 @@ function getPurl() {
 			{
 				purl = RegExp.$1.replace(/\\/g, "");
 				GM_setValue("purl", purl);
-				init();
-			} else alert("Massive script init error!\n\nIf you feel this is a mistake on my part, please let me know: http://userscripts.org/scripts/show/31864");
+				script();
+			} else alert("Error retrieving url for the new player!\n\nIf you feel this is a mistake on my part, please let me know: http://userscripts.org/scripts/show/31864");
 		}
 	});
 }
-var purl = unsafeWindow.yt.config_.SWF_CONFIG.url;
+
+var config = unsafeWindow.yt.config_, purl = config.SWF_CONFIG.url;
 if (purl.indexOf("as3")==-1) {
 	purl = GM_getValue("purl");
 	if (purl == null) getPurl();
@@ -576,8 +569,8 @@ if (purl.indexOf("as3")==-1) {
 		method : "HEAD",
 		onload : function(A)
 		{
-			if(A.status == 200) init();
+			if(A.status == 200) script();
 			else getPurl();
 		}
 	});
-} else init();
+} else script();
