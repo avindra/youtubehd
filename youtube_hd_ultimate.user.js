@@ -5,7 +5,7 @@
 // @include       http://youtube.com/watch*
 // @namespace     #aVg
 // @license       CC-BY-NC-SA http://creativecommons.org/licenses/by-nc-sa/3.0/
-// @version       1.2.3
+// @version       1.2.4
 // ==/UserScript==
 function Params(A) {
 	var obj = {};
@@ -29,7 +29,7 @@ function Params(A) {
 	return obj;
 }
 function $(A) {return document.getElementById(A);}
-const thisVer="1.2.3";
+const thisVer="1.2.4";
 function script() {
 function update(resp) {
 	GM_xmlhttpRequest({
@@ -277,16 +277,16 @@ optionBox.appendChild(new Element("a", {
 ));
 var sLinks = {
 	"homepage" : "http://userscripts.org/scripts/show/31864",
-	"official" : "http://code.google.com/p/youtubehd/",
+	"development" : "http://code.google.com/p/youtubehd/",
 	"author" : "http://userscripts.org/users/avindra",
 	"donate" : "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=steveaarti%40gmail%2ecom&lc=US&item_name=Avindra%20Goolcharan&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted",
 	"e-mail" : "mailto:aavindraa@gmail.com",
 	"forums" : "http://userscripts.org/scripts/discuss/31864",
-	"wiki + F1" : "http://code.google.com/p/youtubehd/wiki/mainPage",
+	"help / wiki" : "http://userscripts.wikia.com/wiki/YouTube_HD_Ultimate",
 	"open bugs + requests" : "http://code.google.com/p/youtubehd/issues/list",
 	"all bugs + requests" : "http://code.google.com/p/youtubehd/issues/list?can=1",
-	"new bug" : "http://code.google.com/p/youtubehd/issues/entry",
-	"new request" : "http://code.google.com/p/youtubehd/issues/entry?template=Feature%20Request"
+	"report new bug" : "http://code.google.com/p/youtubehd/issues/entry",
+	"create new request" : "http://code.google.com/p/youtubehd/issues/entry?template=Feature%20Request"
 };
 for (var link in sLinks) {
 	linkbox.appendChild(new Element("a", {
