@@ -350,7 +350,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		unsafeWindow.addEventListener("focus", playVideo, false);
 		unsafeWindow.addEventListener("mousemove", playVideo, false);
 	}
-	if(start != 0) player.pauseVideo();
+	player.pauseVideo();
 	var el = $("quicklist");
 	if (el) {
 		if(opts.qlKill) el.style.display = "none";
@@ -385,8 +385,7 @@ if (opts.hideRate) {
 	ads.push("ratings");
 	ads.push("ratings_module");
 }
-for (var i=ads.length-1;i>=0;i--)
-	delete swfArgs[ads[i]];
+for (var i=ads.length-1;i>=0;i--) delete swfArgs[ads[i]];
 /*
 	swfArgs.cc_load_policy = "1";
 	swfArgs.cc_font = "Arial Unicode MS, arial, verdana, _sans";
@@ -406,8 +405,8 @@ else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|3[457])\/
 	swfArgs.fmt_map = swfArgs.fmt_list;
 	swfArgs.fmt_url_map = swfArgs.fmt_stream_map.replace(/\|\|tc\.v\d+\.cache\d+\.c\.youtube\.com/g, "");
 }
-var start=0;
 if (location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
+	var start=0;
 	if (RegExp.$1) start += Number(RegExp.$1 + "0") * 6;
 	if (RegExp.$2) start += Number(RegExp.$2);
 	swfArgs.start = start;
@@ -471,8 +470,7 @@ head.appendChild(new Element("a", {
 	textContent : "mini mode o" + (opts.min ? "n" : "ff")
 }));
 }
-var mnuActions;
-var watch=$("watch-actions");
+var mnuActions, watch=$("watch-actions");
 $("watch-actions-right").appendChild(
 	new Element("button", {
 		className : "yt-uix-button yt-uix-tooltip",
@@ -520,7 +518,11 @@ for (var action in actions) {
 		onclick : "actions[\"" + action + "\"]()"
 	}))));
 }
-var downloads={"3gp":"17", mp4:"18"};
+var downloads={"3gp":"17", mp4:"18"}, dls = {};
+for(var fmt_map = swfArgs.fmt_stream_map.split(","), trail = "&title=" + encodeURIComponent($("eow-title").title), i = fmt_map.length - 1; i >= 0; --i) {
+	var s = fmt_map[i].split("|");
+	dls[s[0]] = s[1] + trail;
+}
 if (/(?:^|,)34/.test(swfArgs.fmt_map)) downloads["hq flv"]="34";
 if (config.IS_HD_AVAILABLE || /(?:^|,)35/.test(swfArgs.fmt_map)) downloads["super hq flv"]="35";
 if (config.IS_HD_AVAILABLE) {
@@ -535,9 +537,10 @@ var flv=new Element("a", {
 });
 block.appendChild(flv);
 for (var dl in downloads) {
-	var temp=flv.cloneNode(false);
+	var temp=flv.cloneNode(false), fmt = downloads[dl];
 	temp.appendChild(document.createTextNode(dl));
-	temp.href+="&fmt="+downloads[dl];
+	if(fmt in dls) temp.href = dls[fmt];
+	else temp.href += "&fmt=" + fmt;
 	block.appendChild(document.createTextNode(" // "));
 	block.appendChild(temp);
 }
