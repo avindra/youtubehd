@@ -51,7 +51,6 @@ if ((GM_getValue("lastCheck"), now) <= (now - 86400000)) {
 var player=unsafeWindow.document.getElementById("movie_player"),
 	swfArgs = new Params(player.getAttribute("flashvars")),
 	optionBox,
-	toggler,
 	globals = {
 		getHeight : function(miniMode) {
 			return miniMode ? 35 : 29;
@@ -117,7 +116,7 @@ function fitToWindow() {
 }
 function fitBig(force) {
 	globals.isWide = (typeof force=="boolean") ? force : !globals.isWide;
-	unsafeWindow.yt.www.watch.player.enableWideScreen(globals.isWide, true);
+	unsafeWindow.yt.www.watch.player.onPlayerSizeClicked(globals.isWide);
 	if(globals.isWide) {
 		var h = window.innerHeight - 150;
 		if(opts.maxLock) {
@@ -262,7 +261,7 @@ optionBox.appendChild(new Element("a", {
 	style : "float: right; height: 20px; padding-top: 3px; margin-top: -25px; color: black;",
 	onclick : function(E) {
 		E.preventDefault();
-		toggler.textContent="Show Ultimate Options";
+		globals.toggler.textContent="Show Ultimate Options";
 		for (var newOpt, i=newOpts.length-1; i>=0; --i) {
 			newOpt=newOpts[i];
 			GM_setValue(newOpt.name, newOpt[newOpt.nodeName=="SELECT" ? "selectedIndex" : newOpt.type=="text" ? "value" : "checked"]);
@@ -303,7 +302,7 @@ linkbox.appendChild(new Element("a", {
 }));
 linkbox.appendChild(new Element("a", {
 	textContent : "debugString",
-	title : "This is for easing development. Don't worry about it unless Avindra tells you to use it.",
+	title : "This is for easing development. Don't worry about it unless the devs tell you to use it.",
 	onclick : function(E) {
 		E.preventDefault();
 		for (var arg in swfArgs) if (arg.indexOf("rv")==0) delete swfArgs[arg];
@@ -315,7 +314,7 @@ linkbox.appendChild(new Element("a", {
 	}
 }));
 document.body.appendChild(optionBox);
-$("masthead-nav").appendChild(toggler=new Element("a", {
+$("masthead-nav").appendChild(globals.toggler=new Element("a", {
 	style : "font-weight:bold; padding: 4px 10px; background-color: #0033CC; color: white; -moz-border-radius: 8px;",
 	textContent : "Show Ultimate Options",
 	onclick : function(E) {
@@ -341,8 +340,9 @@ unsafeWindow.stateChanged=function(state) {
 unsafeWindow.onYouTubePlayerReady=function(A) {
 	if (player.getAttribute("wmode")!="opaque") return;
 	player.setPlaybackQuality(["hd1080", "hd720", "large", "medium", "small"][opts.vq]);
-	if(!opts.autobuffer) {
-		function playVideo() {
+	if(opts.autobuffer || opts.autoplay) {
+	} else {
+		function playVideo(e) {
 			player.playVideo();
 			unsafeWindow.removeEventListener("focus", playVideo, false);
 			unsafeWindow.removeEventListener("mousemove", playVideo, false);
@@ -350,7 +350,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		unsafeWindow.addEventListener("focus", playVideo, false);
 		unsafeWindow.addEventListener("mousemove", playVideo, false);
 	}
-	player.pauseVideo();
+	if(!opts.autoplay) player.pauseVideo();
 	var el = $("quicklist");
 	if (el) {
 		if(opts.qlKill) el.style.display = "none";
@@ -518,7 +518,7 @@ for (var action in actions) {
 		onclick : "actions[\"" + action + "\"]()"
 	}))));
 }
-var downloads={"3gp":"17", mp4:"18"}, dls = {};
+var downloads={"terrible flv" : "5", "3gp":"17", mp4:"18"}, dls = {};
 for(var fmt_map = swfArgs.fmt_stream_map.split(","), trail = "&title=" + encodeURIComponent($("eow-title").title), i = fmt_map.length - 1; i >= 0; --i) {
 	var s = fmt_map[i].split("|");
 	dls[s[0]] = s[1] + trail;
