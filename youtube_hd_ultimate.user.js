@@ -5,7 +5,7 @@
 // @include       http://youtube.com/watch*
 // @namespace     #aVg
 // @license       CC-BY-NC-SA http://creativecommons.org/licenses/by-nc-sa/3.0/
-// @version       1.2.4
+// @version       1.2.5
 // ==/UserScript==
 function Params(A) {
 	var obj = {};
@@ -29,7 +29,7 @@ function Params(A) {
 	return obj;
 }
 function $(A) {return document.getElementById(A);}
-const thisVer="1.2.4";
+const thisVer="1.2.5";
 function script() {
 function update(resp) {
 	GM_xmlhttpRequest({
@@ -310,7 +310,7 @@ linkbox.appendChild(new Element("a", {
 		opts.ver = thisVer;
 		opts.ua = navigator.userAgent;
 		opts.flash = unsafeWindow.navigator.plugins["Shockwave Flash"].description;
-		prompt("Here is your debugString:", opts.toSource());
+		prompt("This is your debugString. Copy it with CTRL + X. If posting on userscripts.org, please use pastebin.com to post it.", opts.toSource());
 	}
 }));
 document.body.appendChild(optionBox);
@@ -518,7 +518,7 @@ for (var action in actions) {
 		onclick : "actions[\"" + action + "\"]()"
 	}))));
 }
-var downloads={"terrible flv" : "5", "3gp":"17", mp4:"18"}, dls = {};
+var downloads={"terrible flv" : "5", "3gp":"17", mp4:"18", "hq 3gp" : "36"}, dls = {};
 for(var fmt_map = swfArgs.fmt_stream_map.split(","), trail = "&title=" + encodeURIComponent($("eow-title").title), i = fmt_map.length - 1; i >= 0; --i) {
 	var s = fmt_map[i].split("|");
 	dls[s[0]] = s[1] + trail;
