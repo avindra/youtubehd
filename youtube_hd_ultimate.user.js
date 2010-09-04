@@ -330,6 +330,24 @@ head.addEventListener("click", function() {
 }, false);
 if (opts.jumpToPlayer) head.scrollIntoView(true);
 unsafeWindow.stateChanged=function(state) {
+	if (state == 3) {
+		if(opts.autobuffer) {
+			if(!globals.init) {
+				player.seekTo(0, true);
+				globals.init = true;
+			}
+			player.pauseVideo();
+			globals.bytes = player.getVideoBytesTotal() - player.getVideoStartBytes();
+			globals.BPS = globals.bytes / (player.getDuration() - player.getCurrentTime());
+			setInterval(function() {
+				
+			}, 500);
+		} else if(autoplay) {
+			
+		} else {
+			
+		}
+	}
 	if (state!=0) return;
 	if (config.LIST_AUTO_PLAY_ON) location.href = config["LIST_PLAY_NEXT_URL" + (config.SHUFFLE_ENABLED ? "_WITH_SHUFFLE" : "")];
 	else if (opts.loop) {
@@ -340,17 +358,6 @@ unsafeWindow.stateChanged=function(state) {
 unsafeWindow.onYouTubePlayerReady=function(A) {
 	if (player.getAttribute("wmode")!="opaque") return;
 	player.setPlaybackQuality(["highres", "hd1080", "hd720", "large", "medium", "small"][opts.vq]);
-	if(opts.autobuffer || opts.autoplay) {
-	} else {
-		function playVideo(e) {
-			player.playVideo();
-			unsafeWindow.removeEventListener("focus", playVideo, false);
-			unsafeWindow.removeEventListener("mousemove", playVideo, false);
-		}
-		unsafeWindow.addEventListener("focus", playVideo, false);
-		unsafeWindow.addEventListener("mousemove", playVideo, false);
-	}
-	if(!opts.autoplay) player.pauseVideo();
 	var el = $("quicklist");
 	if (el) {
 		if(opts.qlKill) el.style.display = "none";
