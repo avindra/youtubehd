@@ -475,65 +475,18 @@ head.appendChild(new Element("a", {
 	textContent : "mini mode o" + (opts.min ? "n" : "ff")
 }));
 }
-var mnuActions, watch=$("watch-actions");
-$("watch-actions-right").appendChild(
-	new Element("button", {
-		className : "yt-uix-button yt-uix-tooltip",
-		onclick : function(E) {
-		//	E.preventDefault();
-		}
-	}, new Array(
-		new Element("span", {
-			className : "yt-uix-button-content",
-			textContent : "YTHD",
-			onclick : function() {
-			}
-		}),
-		new Element("img", {
-			className : "yt-uix-button-arrow"
-		}),
-		mnuActions = new Element("ul", {
-			className : "yt-uix-button-menu"
-		})
-	), {
-		"type" : "button",
-		"data-tooltip" : "This allows you to share links with friends with the current time and best quality."
-	}),
-	watch.childNodes[8]
-);
-var actions = {
-	"Get time link" : function() {
-			var time = "";
-			var ct = player.getCurrentTime();
-			var m = Math.floor( ct / 60), s = Math.round(ct - m * 60);
-			time = "#t=";
-			if (m > 0) time += m + "m";
-			if (s > 0) time += s + "s";
-			prompt("Here is your custom made link for highest quality:", "http://www.youtube.com/watch" + location.search.replace(/[?&]fmt=\d*/,"") + "&fmt=" + (config.IS_HD_AVAILABLE ? "22" : "18") + time);
-	}
-};
-unsafeWindow.actions = actions;
-for (var action in actions) {
-	mnuActions.appendChild(new Element("li", null, new Array(new Element(
-	"span", {
-		className : "yt-uix-button-menu-item",
-		onclick : actions[action],
-		textContent : action
-	}, null, {
-		onclick : "actions[\"" + action + "\"]()"
-	}))));
-}
-var downloads={"terrible flv" : "5", "3gp":"17", mp4:"18", "hq 3gp" : "36"}, dls = {};
+
+var downloads={5 : "terrible flv", 17 : "3gp", 18 : "mp4", 36 : "hq 3gp"}, dls = {};
 for(var fmt_map = swfArgs.fmt_stream_map.split(","), trail = "&title=" + encodeURIComponent($("eow-title").title.replace(/"/g, "'")), i = fmt_map.length - 1; i >= 0; --i) {
 	var s = fmt_map[i].split("|");
 	dls[s[0]] = s[1] + trail;
 }
-if (/(?:^|,)34/.test(swfArgs.fmt_map)) downloads["hq flv"]="34";
-if (config.IS_HD_AVAILABLE || /(?:^|,)35/.test(swfArgs.fmt_map)) downloads["super hq flv"]="35";
+if (34 in dls) downloads[34]="hq flv";
+if (config.IS_HD_AVAILABLE || (35 in dls)) downloads[35]="super hq flv";
 if (config.IS_HD_AVAILABLE) {
-	downloads["720p mp4"] = "22";
-	if (/(?:^|,)37/.test(swfArgs.fmt_map)) downloads["1080p mp4"] = "37";
-	if (/(?:^|,)38/.test(swfArgs.fmt_map)) downloads[">1080p (\"4k\")"] = "38";
+	downloads[22] = "720p mp4";
+	if (37 in dls) downloads[37] = "1080p mp4";
+	if (38 in dls) downloads[38] = "4k mp4";
 }
 var info=$("watch-ratings-views"), block=new Element("div");
 block.appendChild(document.createTextNode("Download this video as a(n): "));
@@ -543,17 +496,25 @@ var flv=new Element("a", {
 });
 block.appendChild(flv);
 for (var dl in downloads) {
-	var temp=flv.cloneNode(false), fmt = downloads[dl];
-	temp.appendChild(document.createTextNode(dl));
-	if(fmt in dls) {
-		temp.href = dls[fmt];
+	var temp=flv.cloneNode(false);
+	temp.appendChild(document.createTextNode(downloads[dl]));
+	if(dl in dls) {
+		temp.href = dls[dl];
 		temp.style.fontWeight = "bold";
-	} else temp.href += "&fmt=" + fmt;
-	temp.title = "fmtCode=" + fmt;
+	} else temp.href += "&fmt=" + dl;
+	temp.title = "fmtCode=" + dl;
 	block.appendChild(document.createTextNode(" // "));
 	block.appendChild(temp);
 }
 $("watch-info").appendChild(block);
+var tail = "&fmt=";
+if (config.IS_HD_AVAILABLE) {
+	var hfmt = "";
+	if(38 in dls) hfmt = "38";
+	tail += hfmt;
+} else tail += "18";
+config.SHARE_URL += tail;
+config.SHARE_URL_SHORT += tail;
 }
 if (!$("watch-headline-title")) location.replace(location.href.replace("#!", "?"));
 
