@@ -507,12 +507,9 @@ for (var dl in downloads) {
 	block.appendChild(temp);
 }
 $("watch-info").appendChild(block);
-var tail = "&fmt=";
-if (config.IS_HD_AVAILABLE) {
-	var hfmt = "";
-	if(38 in dls) hfmt = "38";
-	tail += hfmt;
-} else tail += "18";
+var tail = "&fmt=", highest = "";
+for(var dls in downloads) highest = dls;
+tail += highest;
 config.SHARE_URL += tail;
 config.SHARE_URL_SHORT += tail;
 }
