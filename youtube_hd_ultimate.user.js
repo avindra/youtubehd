@@ -122,8 +122,8 @@ function fitBig(force) {
 		if(opts.maxLock) {
 			var max;
 			switch(player.getPlaybackQuality()) {
-				case "hd1080" : max = 1080; break;
-				case "hd720" : max = 720; break;
+			case "hd1080" : max = 1080; break;
+			case "hd720" : max = 720; break;
 			}
 			max += globals.getHeight();
 			if(h > max) h = max;
@@ -213,28 +213,28 @@ for (var opt in opts) {
 		else val = full;
 	}
 	switch (typeof val) {
-		case "string" :
-		a = document.createElement("input");
-		a.value = val;
-		break;
-		case "boolean" :
-		a = document.createElement("input");
-		a.type = "checkbox";
-		a.addEventListener("click", function() {this.parentNode.className = this.checked ? "on" : "";}, false);
-		a.checked = val;
-		if (val) s.className = "on";
-		s.appendChild(a);
-		s.appendChild(document.createTextNode(opts[opt][0]));
-		append = false;
-		break;
-		case "number" :
-		a = document.createElement("select");
-		for (var i = full.length - 1; i>=0; --i)
-			a.appendChild(new Element("option", {
-				textContent : full[i]
-			}));
-		a.selectedIndex = val;
-		break;
+	case "string" :
+	a = document.createElement("input");
+	a.value = val;
+	break;
+	case "boolean" :
+	a = document.createElement("input");
+	a.type = "checkbox";
+	a.addEventListener("click", function() {this.parentNode.className = this.checked ? "on" : "";}, false);
+	a.checked = val;
+	if (val) s.className = "on";
+	s.appendChild(a);
+	s.appendChild(document.createTextNode(opts[opt][0]));
+	append = false;
+	break;
+	case "number" :
+	a = document.createElement("select");
+	for (var i = full.length - 1; i>=0; --i)
+		a.appendChild(new Element("option", {
+			textContent : full[i]
+		}));
+	a.selectedIndex = val;
+	break;
 	}
 	a.name = opt;
 	if (append) {
@@ -425,26 +425,26 @@ head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
 document.addEventListener("keydown", function(E) {
 	if ("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
 	switch (E.keyCode) {
-		case 83: globals.setHeight(globals.getHeight(true)); return;
-		case 80: player[(player.getPlayerState()==1 ? "pause" : "play") + "Video"](); return;
-		case 82: player.seekTo(0, true); return;
-		case 77: player[player.isMuted() ? "unMute" : "mute"](); return;
-		case 69: player.seekTo(player.getDuration(), true); return;
-		case 66: fitBig(); return;
-		case 39: player.seekTo(player.getCurrentTime()+.5, true);return;
-		case 37: player.seekTo(Math.round(player.getCurrentTime()-1), true);return;
-		return;
+	case 83: globals.setHeight(globals.getHeight(true)); return;
+	case 80: player[(player.getPlayerState()==1 ? "pause" : "play") + "Video"](); return;
+	case 82: player.seekTo(0, true); return;
+	case 77: player[player.isMuted() ? "unMute" : "mute"](); return;
+	case 69: player.seekTo(player.getDuration(), true); return;
+	case 66: fitBig(); return;
+	case 39: player.seekTo(player.getCurrentTime()+.5, true);return;
+	case 37: player.seekTo(Math.round(player.getCurrentTime()-1), true);return;
+	return;
 	}
 	if (E.ctrlKey)
 		switch (E.keyCode) {
-			case 38:
-				E.preventDefault();
-				player.setVolume(player.getVolume() + 4);
-				return;
-			case 40:
-				E.preventDefault();
-				player.setVolume(player.getVolume() - 4);
-				return;
+		case 38:
+			E.preventDefault();
+			player.setVolume(player.getVolume() + 4);
+			return;
+		case 40:
+			E.preventDefault();
+			player.setVolume(player.getVolume() - 4);
+			return;
 		}
 }, false);
 if(opts.tools) {
