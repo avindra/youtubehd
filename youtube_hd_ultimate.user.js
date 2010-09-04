@@ -330,7 +330,8 @@ head.addEventListener("click", function() {
 }, false);
 if (opts.jumpToPlayer) head.scrollIntoView(true);
 unsafeWindow.stateChanged=function(state) {
-	if (state == 3) {
+	switch(state) {
+	case 3 :
 		if(opts.autobuffer) {
 			if(!globals.init) {
 				player.seekTo(0, true);
@@ -340,19 +341,16 @@ unsafeWindow.stateChanged=function(state) {
 			globals.bytes = player.getVideoBytesTotal() - player.getVideoStartBytes();
 			globals.BPS = globals.bytes / (player.getDuration() - player.getCurrentTime());
 			setInterval(function() {
-				
+
 			}, 500);
-		} else if(autoplay) {
-			
-		} else {
-			
 		}
-	}
-	if (state!=0) return;
-	if (config.LIST_AUTO_PLAY_ON) location.href = config["LIST_PLAY_NEXT_URL" + (config.SHUFFLE_ENABLED ? "_WITH_SHUFFLE" : "")];
-	else if (opts.loop) {
-		player.seekTo(0, true);
-		player.playVideo();
+		break;
+	case 0 :
+		if (config.LIST_AUTO_PLAY_ON) location.href = config["LIST_PLAY_NEXT_URL" + (config.SHUFFLE_ENABLED ? "_WITH_SHUFFLE" : "")];
+		else if (opts.loop) {
+			player.seekTo(0, true);
+			player.playVideo();
+		}
 	}
 };
 unsafeWindow.onYouTubePlayerReady=function(A) {
@@ -535,7 +533,7 @@ if (config.IS_HD_AVAILABLE || /(?:^|,)35/.test(swfArgs.fmt_map)) downloads["supe
 if (config.IS_HD_AVAILABLE) {
 	downloads["720p mp4"] = "22";
 	if (/(?:^|,)37/.test(swfArgs.fmt_map)) downloads["1080p mp4"] = "37";
-	if (/(?:^|,)38/.test(swfArgs.fmt_map)) downloads["original (\"4k\")"] = "38";
+	if (/(?:^|,)38/.test(swfArgs.fmt_map)) downloads[">1080p (\"4k\")"] = "38";
 }
 var info=$("watch-ratings-views"), block=new Element("div");
 block.appendChild(document.createTextNode("Download this video as a(n): "));
