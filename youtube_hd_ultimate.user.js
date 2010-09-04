@@ -530,7 +530,7 @@ if (config.IS_HD_AVAILABLE) {
 	if (/(?:^|,)37/.test(swfArgs.fmt_map)) downloads["1080p mp4"] = "37";
 }
 var info=$("watch-ratings-views"), block=new Element("div");
-block.appendChild(document.createTextNode("Download this video as: "));
+block.appendChild(document.createTextNode("Download this video as a(n): "));
 var flv=new Element("a", {
 	href : "/get_video?asv&video_id="+swfArgs.video_id+"&t="+swfArgs.t,
 	textContent : "flv"
@@ -539,8 +539,10 @@ block.appendChild(flv);
 for (var dl in downloads) {
 	var temp=flv.cloneNode(false), fmt = downloads[dl];
 	temp.appendChild(document.createTextNode(dl));
-	if(fmt in dls) temp.href = dls[fmt];
-	else temp.href += "&fmt=" + fmt;
+	if(fmt in dls) {
+		temp.href = dls[fmt];
+		temp.style.fontWeight = "bold";
+	} else temp.href += "&fmt=" + fmt;
 	block.appendChild(document.createTextNode(" // "));
 	block.appendChild(temp);
 }
