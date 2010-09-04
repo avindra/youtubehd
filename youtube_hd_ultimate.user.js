@@ -74,7 +74,7 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 	newOpts = new Array();
 document.title = document.title.substring(10);
 var opts = {
-	vq : new Array("Max Quality", new Array("240p", "360p", "480p", "720p", "1080p"), "Please choose the maximum video quality your computer can handle."),
+	vq : new Array("Max Quality", new Array("240p", "360p", "480p", "720p", "1080p", "max"), "Please choose the maximum video quality your computer can handle."),
 	autoplay : new Array("Autoplay", true, "By default, YouTube autoplays all of it's videos."),
 	autobuffer : new Array("Autobuffer", false, "If you have a slow computer and/or a slow connection, turn this on to let the video download while it's paused, then you can hit the play button."),
 	hidenotes : new Array("Hide annotations", true, "Annotations are those annoying notes some users leave that say \"visit my site!\" or \"make sure to watch in HD!!\" in the video. But we already know that, right? You can turn them off if you want."),
@@ -339,7 +339,7 @@ unsafeWindow.stateChanged=function(state) {
 };
 unsafeWindow.onYouTubePlayerReady=function(A) {
 	if (player.getAttribute("wmode")!="opaque") return;
-	player.setPlaybackQuality(["hd1080", "hd720", "large", "medium", "small"][opts.vq]);
+	player.setPlaybackQuality(["highres", "hd1080", "hd720", "large", "medium", "small"][opts.vq]);
 	if(opts.autobuffer || opts.autoplay) {
 	} else {
 		function playVideo(e) {
@@ -390,7 +390,7 @@ for (var i=ads.length-1;i>=0;i--) delete swfArgs[ads[i]];
 	swfArgs.cc_load_policy = "1";
 	swfArgs.cc_font = "Arial Unicode MS, arial, verdana, _sans";
 */
-swfArgs.vq=["hd1080", "hd720", "large", "medium", "small"][opts.vq];
+swfArgs.vq=["highres", "hd1080", "hd720", "large", "medium", "small"][opts.vq];
 if (swfArgs.fmt_map.indexOf("18")==0 && /3[457]|22/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/, "");
 else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|3[457])\//.test(swfArgs.fmt_map)) {
 	if (swfArgs.fmt_stream_map.split(",").length == 1) {
@@ -519,7 +519,7 @@ for (var action in actions) {
 	}))));
 }
 var downloads={"terrible flv" : "5", "3gp":"17", mp4:"18", "hq 3gp" : "36"}, dls = {};
-for(var fmt_map = swfArgs.fmt_stream_map.split(","), trail = "&title=" + encodeURIComponent($("eow-title").title), i = fmt_map.length - 1; i >= 0; --i) {
+for(var fmt_map = swfArgs.fmt_stream_map.split(","), trail = "&title=" + encodeURIComponent($("eow-title").title.replace(/"/g, "'")), i = fmt_map.length - 1; i >= 0; --i) {
 	var s = fmt_map[i].split("|");
 	dls[s[0]] = s[1] + trail;
 }
@@ -528,6 +528,7 @@ if (config.IS_HD_AVAILABLE || /(?:^|,)35/.test(swfArgs.fmt_map)) downloads["supe
 if (config.IS_HD_AVAILABLE) {
 	downloads["720p mp4"] = "22";
 	if (/(?:^|,)37/.test(swfArgs.fmt_map)) downloads["1080p mp4"] = "37";
+	if (/(?:^|,)38/.test(swfArgs.fmt_map)) downloads["original (\"4k\")"] = "38";
 }
 var info=$("watch-ratings-views"), block=new Element("div");
 block.appendChild(document.createTextNode("Download this video as a(n): "));
@@ -543,6 +544,7 @@ for (var dl in downloads) {
 		temp.href = dls[fmt];
 		temp.style.fontWeight = "bold";
 	} else temp.href += "&fmt=" + fmt;
+	temp.title = "fmtCode=" + fmt;
 	block.appendChild(document.createTextNode(" // "));
 	block.appendChild(temp);
 }
