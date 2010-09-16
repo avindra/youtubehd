@@ -7,6 +7,7 @@
 // @license       CC-BY-NC-SA http://creativecommons.org/licenses/by-nc-sa/3.0/
 // @version       1.2.5
 // ==/UserScript==
+// FIX THIS VIDEO : http://www.youtube.com/watch?v=xGfLNqjh4j0&feature=fvwk
 function Params(A) {
 	var obj = {};
 	for (var i = 0, isProp = true, cur, curProp = "", curValue = ""; i < A.length; ++i) {
@@ -314,7 +315,7 @@ linkbox.appendChild(new Element("a", {
 	}
 }));
 document.body.appendChild(optionBox);
-$("masthead-nav").appendChild(globals.toggler=new Element("a", {
+$("masthead-utility").childNodes[1].appendChild(globals.toggler=new Element("a", {
 	style : "font-weight:bold; padding: 4px 10px; background-color: #0033CC; color: white; -moz-border-radius: 8px;",
 	textContent : "Show Ultimate Options",
 	onclick : function(E) {
