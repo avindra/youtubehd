@@ -388,14 +388,12 @@ if (!opts.autoplay && !opts.autobuffer) swfArgs.autoplay="0";
 else if (opts.autoplay) swfArgs.autoplay="1";
 var ads=new Array("infringe", "invideo", "ctb", "interstitial", "watermark");
 if (opts.hideRate) {
-	ads.push("ratings");
+	ads.push("ratings_preroll");
 	ads.push("ratings_module");
+	ads.push("ratings3_module");
+	ads.push("ratings");
 }
 for (var i=ads.length-1;i>=0;i--) delete swfArgs[ads[i]];
-/*
-	swfArgs.cc_load_policy = "1";
-	swfArgs.cc_font = "Arial Unicode MS, arial, verdana, _sans";
-*/
 swfArgs.vq=["highres", "hd1080", "hd720", "large", "medium", "small"][opts.vq];
 if (swfArgs.fmt_map.indexOf("18")==0 && /3[457]|22/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/, "");
 else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|3[457])\//.test(swfArgs.fmt_map)) {
