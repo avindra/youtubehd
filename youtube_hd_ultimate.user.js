@@ -332,20 +332,20 @@ if (opts.jumpToPlayer) head.scrollIntoView(true);
 unsafeWindow.stateChanged=function(state) {
 	switch(state) {
 	case 3 :
-		if(opts.autobuffer) {
-			if(!globals.init) {
-				player.seekTo(0, true);
-				globals.init = true;
-			}
-			player.pauseVideo();
-		}
-		break;
-	case 0 :
-		if (config.LIST_AUTO_PLAY_ON) location.href = config["LIST_PLAY_NEXT_URL" + (config.SHUFFLE_ENABLED ? "_WITH_SHUFFLE" : "")];
-		else if (opts.loop) {
+	if(opts.autobuffer) {
+		if(!globals.init) {
 			player.seekTo(0, true);
-			player.playVideo();
+			globals.init = true;
 		}
+		player.pauseVideo();
+	}
+	break;
+	case 0 :
+	if (config.LIST_AUTO_PLAY_ON) location.href = config["LIST_PLAY_NEXT_URL" + (config.SHUFFLE_ENABLED ? "_WITH_SHUFFLE" : "")];
+	else if (opts.loop) {
+		player.seekTo(0, true);
+		player.playVideo();
+	}
 	}
 };
 unsafeWindow.onYouTubePlayerReady=function(A) {
@@ -431,13 +431,13 @@ document.addEventListener("keydown", function(E) {
 	if (E.ctrlKey)
 		switch (E.keyCode) {
 		case 38:
-			E.preventDefault();
-			player.setVolume(player.getVolume() + 4);
-			return;
+		E.preventDefault();
+		player.setVolume(player.getVolume() + 4);
+		return;
 		case 40:
-			E.preventDefault();
-			player.setVolume(player.getVolume() - 4);
-			return;
+		E.preventDefault();
+		player.setVolume(player.getVolume() - 4);
+		return;
 		}
 }, false);
 if(opts.tools) {
