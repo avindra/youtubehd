@@ -124,6 +124,9 @@ function fitBig(force) {
 			switch(player.getPlaybackQuality()) {
 			case "hd1080" : max = 1080; break;
 			case "hd720" : max = 720; break;
+			case "large" : max = 600; break;
+			case "medium" : max = 480; break;
+			case "small" : max = 360; break;
 			}
 			max += globals.getHeight();
 			if(h > max) h = max;
@@ -261,7 +264,7 @@ optionBox.appendChild(new Element("a", {
 	style : "float: right; height: 20px; padding-top: 3px; margin-top: -25px; color: black;",
 	onclick : function(E) {
 		E.preventDefault();
-		globals.toggler.textContent="Show Ultimate Options";
+		globals.toggler.textContent="Show YTHD Options";
 		for (var newOpt, i=newOpts.length-1; i>=0; --i) {
 			newOpt=newOpts[i];
 			GM_setValue(newOpt.name, newOpt[newOpt.nodeName=="SELECT" ? "selectedIndex" : newOpt.type=="text" ? "value" : "checked"]);
@@ -316,11 +319,11 @@ linkbox.appendChild(new Element("a", {
 document.body.appendChild(optionBox);
 $("masthead-utility").childNodes[1].appendChild(globals.toggler=new Element("a", {
 	style : "font-weight:bold; padding: 4px 10px; background-color: #0033CC; color: white; -moz-border-radius: 8px;",
-	textContent : "Show Ultimate Options",
+	textContent : "Show YTHD Options",
 	onclick : function(E) {
 		E.preventDefault();
 		var isHidden = optionBox.style.display=="none";
-		this.textContent= (isHidden ? "Hide" : "Show") + " Ultimate Options";
+		this.textContent= (isHidden ? "Hide" : "Show") + " YTHD Options";
 		optionBox.style.display=isHidden ? "inline" : "none";
 	}
 }));
@@ -390,18 +393,19 @@ if (opts.hideRate) {
 for (var i=ads.length-1;i>=0;i--) delete swfArgs[ads[i]];
 swfArgs.vq=["highres", "hd1080", "hd720", "large", "medium", "small"][opts.vq];
 if (swfArgs.fmt_map.indexOf("18")==0 && /3[457]|22/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/, "");
-else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map) && !/(?:18|22|3[457])\//.test(swfArgs.fmt_map)) {
+else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map)) {
 	if (swfArgs.fmt_stream_map.split(",").length == 1) {
 		// 240p default, 360p secret
 		if (location.search.indexOf("fmt=18")==-1) {
 			location.replace(location.protocol + "//" + location.host +location.pathname + location.search + "&fmt=18" + location.hash);
 			return;
 		}
+	} else if(!/(?:18|22|3[457])\//.test(swfArgs.fmt_map)) {
+		swfArgs.fmt_stream_map = swfArgs.fmt_stream_map.match(/\|([^,]+)/)[1].replace(/itag=\d+/, "itag=18");
+		swfArgs.fmt_list = "18/" + (RegExp.$1=="0" ? "512000" : "640x360") + "/9/0/115," + swfArgs.fmt_list;
+		swfArgs.fmt_map = swfArgs.fmt_list;
+		swfArgs.fmt_url_map = swfArgs.fmt_stream_map.replace(/\|\|tc\.v\d+\.cache\d+\.c\.youtube\.com/g, "");
 	}
-	else swfArgs.fmt_stream_map = swfArgs.fmt_stream_map.match(/\|([^,]+)/)[1].replace(/itag=\d+/, "itag=18");
-	swfArgs.fmt_list = "18/" + (RegExp.$1=="0" ? "512000" : "640x360") + "/9/0/115," + swfArgs.fmt_list;
-	swfArgs.fmt_map = swfArgs.fmt_list;
-	swfArgs.fmt_url_map = swfArgs.fmt_stream_map.replace(/\|\|tc\.v\d+\.cache\d+\.c\.youtube\.com/g, "");
 }
 if (location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
 	var start=0;
