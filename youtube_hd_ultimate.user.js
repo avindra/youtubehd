@@ -11,7 +11,8 @@ if (!$("watch-headline-title")) location.replace(location.href.replace("#!", "?"
 const thisVer="1.2.6";
 function Params(A) {
 	var obj = {};
-	for (var i = 0, isProp = true, cur, curProp = "", curValue = ""; i < A.length; ++i) {
+	var curProp = "", curValue = "";
+	for (var i = 0, isProp = true, cur; i < A.length; ++i) {
 		cur = A.charAt(i);
 		if (isProp) {
 			if (cur=="=") {
@@ -28,6 +29,7 @@ function Params(A) {
 			} else curValue += cur;
 		}
 	}
+	if(curProp != "") obj[curProp] = curValue;
 	return obj;
 }
 function $(A) {return document.getElementById(A);}
@@ -48,6 +50,7 @@ if ((GM_getValue("lastCheck"), now) <= (now - 86400000)) {
 	GM_setValue("lastCheck", now);
 	update(false);
 }
+function script() {
 var config = unsafeWindow.yt.config_, player=unsafeWindow.document.getElementById("movie_player"),
 	swfArgs = new Params(player.getAttribute("flashvars")),
 	optionBox,
@@ -120,15 +123,13 @@ function fitBig(force) {
 	if(globals.isWide) {
 		var h = window.innerHeight - 150;
 		if(opts.maxLock) {
-			var max;
-			switch(player.getPlaybackQuality()) {
-			case "hd1080" : max = 1080; break;
-			case "hd720" : max = 720; break;
-			case "large" : max = 600; break;
-			case "medium" : max = 480; break;
-			case "small" : max = 360; break;
-			}
-			max += globals.getHeight();
+			var max = ({
+			"hd1080" :1080,
+			"hd720" : 720,
+			"large" : 600,
+			"medium" : 480,
+			"small" : 360
+			})[player.getPlaybackQuality()] + globals.getHeight();
 			if(h > max) h = max;
 		}
 		globals.setHeight(h);
@@ -417,7 +418,7 @@ var vars="";
 for (var arg in swfArgs) if (!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
 player.setAttribute("flashvars", vars);
 player.setAttribute("wmode", "opaque");
-player.src += "";
+player.src = purl;
 head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
 document.addEventListener("keydown", function(E) {
 	if ("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
@@ -509,3 +510,34 @@ for(var dls in downloads) highest = dls;
 tail += highest;
 config.SHARE_URL += tail;
 config.SHARE_URL_SHORT += tail;
+}
+
+function getPurl() {
+	GM_xmlhttpRequest({
+		url : "http://www.youtube.com/watch?v=-AIwkpCH1yA",
+		method : "GET",
+		onload : function(A) {
+			if(A.responseText.match(/<param name=\\"movie\\" value=\\"([^"]+)/))
+			{
+				purl = RegExp.$1.replace(/\\/g, "");
+				GM_setValue("purl", purl);
+				script();
+			} else alert("Error retrieving url for the new player!\n\nIf you feel this is a mistake on my part, please let me know: http://userscripts.org/scripts/show/31864");
+		}
+	});
+}
+
+var config = unsafeWindow.yt.config_, purl = config.SWF_CONFIG.url;
+if (purl.indexOf("as3")==-1) {
+	purl = GM_getValue("purl");
+	if (purl == null) getPurl();
+	else GM_xmlhttpRequest({
+		url : purl,
+		method : "HEAD",
+		onload : function(A)
+		{
+			if(A.status == 200) script();
+			else getPurl();
+		}
+	});
+} else script();
