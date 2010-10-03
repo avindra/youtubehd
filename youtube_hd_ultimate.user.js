@@ -291,12 +291,11 @@ var sLinks = {
 	"report new bug" : "http://code.google.com/p/youtubehd/issues/entry",
 	"create new request" : "http://code.google.com/p/youtubehd/issues/entry?template=Feature%20Request"
 };
-for (var link in sLinks) {
+for (var link in sLinks)
 	linkbox.appendChild(new Element("a", {
 		textContent : link,
 		href : sLinks[link]
 	}));
-}
 linkbox.appendChild(new Element("a", {
 	textContent : "check for update",
 	onclick : function(E) {
@@ -509,8 +508,7 @@ var flv=new Element("a", {
 	href : "/get_video?asv&video_id="+swfArgs.video_id+"&t="+swfArgs.t,
 	textContent : "flv"
 });
-block.appendChild(flv);
-adjust(flv);
+adjust(block.appendChild(flv));
 for (var dl in downloads) {
 	var temp=flv.cloneNode(false);
 	temp.appendChild(document.createTextNode(downloads[dl]));
