@@ -51,7 +51,7 @@ if ((GM_getValue("lastCheck"), now) <= (now - 86400000)) {
 	update(false);
 }
 function script() {
-var config = unsafeWindow.yt.config_, player=unsafeWindow.document.getElementById("movie_player"),
+var player=unsafeWindow.document.getElementById("movie_player"),
 	swfArgs = new Params(player.getAttribute("flashvars")),
 	optionBox,
 	globals = {
@@ -475,9 +475,9 @@ head.appendChild(new Element("a", {
 }
 
 var downloads={5 : "terrible flv", 17 : "3gp", 18 : "mp4", 36 : "hq 3gp"}, dls = {};
-for(var fmt_map = swfArgs.fmt_stream_map.split(","), trail = "&title=" + encodeURIComponent($("eow-title").title.replace(/"/g, "'")), i = fmt_map.length - 1; i >= 0; --i) {
+for(var fmt_map = swfArgs.fmt_stream_map.split(","), i = fmt_map.length - 1; i >= 0; --i) {
 	var s = fmt_map[i].split("|");
-	dls[s[0]] = s[1] + trail;
+	dls[s[0]] = s[1];
 }
 if (34 in dls) downloads[34]="hq flv";
 if (config.IS_HD_AVAILABLE || (35 in dls)) downloads[35]="super hq flv";
@@ -486,6 +486,23 @@ if (config.IS_HD_AVAILABLE) {
 	if (37 in dls) downloads[37] = "1080p mp4";
 	if (38 in dls) downloads[38] = "4k mp4";
 }
+var trail = "&title=" + encodeURIComponent($("eow-title").title.replace(/"/g, "'"));
+function adjust(link) {
+	var r = GM_xmlhttpRequest({
+		url : link.href,
+		method : "GET",
+		onreadystatechange : function(A) {
+			switch(A.readyState) {
+			case 2:
+			case 3:
+				r.abort();
+				break;
+			case 4:
+				link.href = A.finalUrl + trail;
+			}
+		}
+	});
+}
 var info=$("watch-ratings-views"), block=new Element("div");
 block.appendChild(document.createTextNode("Download this video as a(n): "));
 var flv=new Element("a", {
@@ -493,13 +510,16 @@ var flv=new Element("a", {
 	textContent : "flv"
 });
 block.appendChild(flv);
+adjust(flv);
 for (var dl in downloads) {
 	var temp=flv.cloneNode(false);
 	temp.appendChild(document.createTextNode(downloads[dl]));
-	if(dl in dls) {
-		temp.href = dls[dl];
-		temp.style.fontWeight = "bold";
-	} else temp.href += "&fmt=" + dl;
+	if(dl in dls)
+		temp.href = dls[dl] + trail;
+	else {
+		temp.href += "&fmt=" + dl;
+		adjust(temp);
+	}
 	temp.title = "fmtCode=" + dl;
 	block.appendChild(document.createTextNode(" // "));
 	block.appendChild(temp);
