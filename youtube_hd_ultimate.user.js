@@ -71,7 +71,12 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 			fitBig(grow);
 			unsafeWindow.onresize = grow && opts.fit ? fitToWindow : null;
 		},
-		isWide : false
+		isWide : false,
+		refresh :  function() {
+			var pos = window.scrollY;
+			window.scroll(0, pos + 1);
+			window.scroll(0, pos);
+		}
 	},
 	head=$("watch-headline-title"),
 	newOpts = new Array();
@@ -322,9 +327,14 @@ $("masthead-utility").childNodes[1].appendChild(globals.toggler=new Element("a",
 	textContent : "Show YTHD Options",
 	onclick : function(E) {
 		E.preventDefault();
-		var isHidden = optionBox.style.display=="none";
-		this.textContent= (isHidden ? "Hide" : "Show") + " YTHD Options";
-		optionBox.style.display=isHidden ? "inline" : "none";
+		globals.isHidden = optionBox.style.display=="none";
+		this.textContent= (globals.isHidden ? "Hide" : "Show") + " YTHD Options";
+		if (globals.isHidden) {
+			var state = player.getPlayerState();
+			if(state == 2 || state == 0) globals.setStyle("marginTop", "450");
+		} else globals.setStyle("marginTop", "0");
+		optionBox.style.display=globals.isHidden ? "inline" : "none";
+		globals.refresh();
 	}
 }));
 if (!opts.bigMode && (opts.maxLock || opts.fit)) opts.bigMode = true;
@@ -349,7 +359,15 @@ unsafeWindow.stateChanged=function(state) {
 		player.seekTo(0, true);
 		player.playVideo();
 	}
+	case -1 :
+	case 2 :
+	if(globals.isHidden) {
+		globals.setStyle("marginTop", "450");
+		globals.refresh();
 	}
+	return;
+	}
+	globals.setStyle("marginTop", "0");
 };
 unsafeWindow.onYouTubePlayerReady=function(A) {
 	if (player.getAttribute("wmode")!="opaque") return;
