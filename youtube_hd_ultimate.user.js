@@ -5,10 +5,10 @@
 // @include       http://youtube.com/watch*
 // @namespace     #aVg
 // @license       CC-BY-NC-SA http://creativecommons.org/licenses/by-nc-sa/3.0/
-// @version       1.2.6
+// @version       1.2.7
 // ==/UserScript==
 if (!$("watch-headline-title")) location.replace(location.href.replace("#!", "?"));
-const thisVer="1.2.6";
+const thisVer="1.2.7";
 function Params(A) {
 	var obj = {};
 	var curProp = "", curValue = "";
@@ -420,7 +420,7 @@ else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map)) {
 		}
 	} else if(!/(?:18|22|3[457])\//.test(swfArgs.fmt_map)) {
 		swfArgs.fmt_stream_map = swfArgs.fmt_stream_map.match(/\|([^,]+)/)[1].replace(/itag=\d+/, "itag=18");
-		swfArgs.fmt_list = "18/" + (RegExp.$1=="0" ? "512000" : "640x360") + "/9/0/115," + swfArgs.fmt_list;
+		swfArgs.fmt_list = "18/640x360/9/0/115," + swfArgs.fmt_list;
 		swfArgs.fmt_map = swfArgs.fmt_list;
 		swfArgs.fmt_url_map = swfArgs.fmt_stream_map.replace(/\|\|tc\.v\d+\.cache\d+\.c\.youtube\.com/g, "");
 	}
