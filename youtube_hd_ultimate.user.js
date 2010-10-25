@@ -8,7 +8,7 @@
 // @version       1.2.7
 // ==/UserScript==
 if (!$("watch-headline-title")) location.replace(location.href.replace("#!", "?"));
-const thisVer="1.2.7";
+const rev="1.2.7";
 function Params(A) {
 	var obj = {};
 	var curProp = "", curValue = "";
@@ -39,7 +39,7 @@ function update(resp) {
 		method : "GET",
 		onload : function(A) {
 			if (A.responseText.match(/\/\/ @version {7}(\S+)/) == null) return;
-			if (RegExp.$1 != thisVer) {
+			if (RegExp.$1 != rev) {
 				if (confirm("There is a new version of YouTube HD Ultimate.\n\nInstall it?")) location.href = "http://userscripts.org/scripts/source/31864.user.js";
 			} else if (resp) alert("There is no new version at this time.");
 		}
@@ -208,7 +208,7 @@ width:1px!important;height:1px!important;\
 	font-family : Calibri, Comic Sans MS;\
 }");
 optionBox = new Element("div", {
-	innerHTML : "<h1>YouTube HD Ultimate Options</h1><span id=\"version\">v "+thisVer+"</span><p>Settings, if changed, will be applied on the next video. Roll over an option to find out more about it.</p>",
+	innerHTML : "<h1>YouTube HD Ultimate Options</h1><span id=\"version\">v "+rev+"</span><p>Settings, if changed, will be applied on the next video. Roll over an option to find out more about it.</p>",
 	style : "display : none",
 	id : "opts"
 });
@@ -315,7 +315,7 @@ linkbox.appendChild(new Element("a", {
 		E.preventDefault();
 		for (var arg in swfArgs) if (arg.indexOf("rv")==0) delete swfArgs[arg];
 		opts.swfArgs = swfArgs;
-		opts.ver = thisVer;
+		opts.ver = rev;
 		opts.ua = navigator.userAgent;
 		opts.flash = unsafeWindow.navigator.plugins["Shockwave Flash"].description;
 		prompt("This is your debugString. Copy it with CTRL + X. If posting on userscripts.org, please use pastebin.com to post it.", opts.toSource());
