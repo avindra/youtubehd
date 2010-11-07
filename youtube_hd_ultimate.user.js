@@ -5,10 +5,10 @@
 // @include       http://youtube.com/watch*
 // @namespace     #aVg
 // @license       CC-BY-NC-SA http://creativecommons.org/licenses/by-nc-sa/3.0/
-// @version       1.2.7
+// @version       1.2.8
 // ==/UserScript==
 if (!$("watch-headline-title")) location.replace(location.href.replace("#!", "?"));
-const rev="1.2.7";
+const rev="1.2.8";
 function Params(A) {
 	var obj = {};
 	var curProp = "", curValue = "";
