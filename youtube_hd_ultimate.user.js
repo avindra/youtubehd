@@ -108,7 +108,7 @@ function Element(A, B, C, D) {
 		else A[b]=B[b];
 	}
 	if (D) for (var d in D) A.setAttribute(d, D[d]);
-	if (C) for each(var c in C) A.appendChild(c);
+	if (C) for (var c in C) A.appendChild(C[c]);
 	return A;
 }
 function center() {
