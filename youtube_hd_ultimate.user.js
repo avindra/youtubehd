@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name          YouTube HD Ultimate
 // @description   The best of the hundreds of YouTube scripts, because we make it. Updated all the time, by me and you! Your favorite YouTube script is better than ever!
-// @include       http://www.youtube.com/watch*
-// @include       http://youtube.com/watch*
+// @include       http*://www.youtube.com/watch*
+// @include       http*://youtube.com/watch*
 // @namespace     #aVg
 // @license       CC-BY-NC-SA http://creativecommons.org/licenses/by-nc-sa/3.0/
 // @version       1.2.8
