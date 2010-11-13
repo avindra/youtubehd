@@ -7,20 +7,20 @@
 // @license       CC-BY-NC-SA http://creativecommons.org/licenses/by-nc-sa/3.0/
 // @version       1.2.8
 // ==/UserScript==
-if (!$("watch-headline-title")) location.replace(location.href.replace("#!", "?"));
+if(!$("watch-headline-title")) location.replace(location.href.replace("#!", "?"));
 const rev="1.2.8";
 function Params(A) {
 	var obj = {};
 	var curProp = "", curValue = "";
-	for (var i = 0, isProp = true, cur; i < A.length; ++i) {
+	for(var i = 0, isProp = true, cur; i < A.length; ++i) {
 		cur = A.charAt(i);
-		if (isProp) {
-			if (cur=="=") {
+		if(isProp) {
+			if(cur=="=") {
 				isProp = false;
 				continue;
 			} else curProp += cur;
 		} else {
-			if (cur=="&") {
+			if(cur=="&") {
 				obj[curProp] = decodeURIComponent(curValue).replace(/\+/g, " ");
 				curValue = "";
 				curProp = "";
@@ -38,15 +38,15 @@ function update(resp) {
 		url : "http://userscripts.org/scripts/source/31864.meta.js",
 		method : "GET",
 		onload : function(A) {
-			if (A.responseText.match(/\/\/ @version {7}(\S+)/) == null) return;
-			if (RegExp.$1 != rev) {
-				if (confirm("There is a new version of YouTube HD Ultimate.\n\nInstall it?")) location.href = "http://userscripts.org/scripts/source/31864.user.js";
-			} else if (resp) alert("There is no new version at this time.");
+			if(A.responseText.match(/\/\/ @version {7}(\S+)/) == null) return;
+			if(RegExp.$1 != rev) {
+				if(confirm("There is a new version of YouTube HD Ultimate.\n\nInstall it?")) location.href = "http://userscripts.org/scripts/source/31864.user.js";
+			} else if(resp) alert("There is no new version at this time.");
 		}
 	});
 }
 var now=new Date().getTime();
-if ((GM_getValue("lastCheck"), now) <= (now - 86400000)) {
+if((GM_getValue("lastCheck"), now) <= (now - 86400000)) {
 	GM_setValue("lastCheck", now);
 	update(false);
 }
@@ -100,19 +100,19 @@ var opts = {
 };
 function Element(A, B, C, D) {
 	A = document.createElement(A);
-	if (B) for (var b in B) {
+	if(B) for(var b in B) {
 		var cur=B[b];
-		if (b.indexOf("on")==0) A.addEventListener(b.substring(2), cur, false);
-		else if (b=="style") A.setAttribute("style", B[b]);
+		if(b.indexOf("on")==0) A.addEventListener(b.substring(2), cur, false);
+		else if(b=="style") A.setAttribute("style", B[b]);
 		else A[b]=B[b];
 	}
-	if (D) for (var d in D) A.setAttribute(d, D[d]);
-	if (C) for (var c in C) A.appendChild(C[c]);
+	if(D) for(var d in D) A.setAttribute(d, D[d]);
+	if(C) for(var c in C) A.appendChild(C[c]);
 	return A;
 }
 function center() {
 	var psize = player.offsetWidth;
-	if (psize > 960) globals.setStyle("marginLeft", Math.round((960 - psize) / 2) - 1);
+	if(psize > 960) globals.setStyle("marginLeft", Math.round((960 - psize) / 2) - 1);
 	else {
 		if(globals.isWide) player.parentNode.style.removeProperty("margin-left");
 		else globals.setStyle("marginLeft", Math.round((637 - psize) / 2) - 1);
@@ -225,10 +225,10 @@ optionBox = new Element("div", {
 optionBox = optionBox.appendChild(new Element("div", {
 	style : "float:left"
 }));
-for (var opt in opts) {
+for(var opt in opts) {
 	var val = GM_getValue(opt), full = opts[opt][1], a, s=document.createElement("label"), append = true;
-	if (val == null) {
-		if (typeof full == "object") val = 0;
+	if(val == null) {
+		if(typeof full == "object") val = 0;
 		else val = full;
 	}
 	switch (typeof val) {
@@ -241,14 +241,14 @@ for (var opt in opts) {
 	a.type = "checkbox";
 	a.addEventListener("click", function() {this.parentNode.className = this.checked ? "on" : "";}, false);
 	a.checked = val;
-	if (val) s.className = "on";
+	if(val) s.className = "on";
 	s.appendChild(a);
 	s.appendChild(document.createTextNode(opts[opt][0]));
 	append = false;
 	break;
 	case "number" :
 	a = document.createElement("select");
-	for (var i = full.length - 1; i>=0; --i)
+	for(var i = full.length - 1; i>=0; --i)
 		a.appendChild(new Element("option", {
 			textContent : full[i]
 		}));
@@ -256,7 +256,7 @@ for (var opt in opts) {
 	break;
 	}
 	a.name = opt;
-	if (append) {
+	if(append) {
 		s.appendChild(document.createTextNode(opts[opt][0]));
 		s.appendChild(a);
 	}
@@ -282,7 +282,7 @@ optionBox.appendChild(new Element("a", {
 	onclick : function(E) {
 		E.preventDefault();
 		globals.toggler.textContent="Show YTHD Options";
-		for (var newOpt, i=newOpts.length-1; i>=0; --i) {
+		for(var newOpt, i=newOpts.length-1; i>=0; --i) {
 			newOpt=newOpts[i];
 			GM_setValue(newOpt.name, newOpt[newOpt.nodeName=="SELECT" ? "selectedIndex" : newOpt.type=="text" ? "value" : "checked"]);
 		}
@@ -307,7 +307,7 @@ var sLinks = {
 	"report new bug" : "http://code.google.com/p/youtubehd/issues/entry",
 	"create new request" : "http://code.google.com/p/youtubehd/issues/entry?template=Feature%20Request"
 };
-for (var link in sLinks)
+for(var link in sLinks)
 	linkbox.appendChild(new Element("a", {
 		textContent : link,
 		href : sLinks[link]
@@ -324,7 +324,7 @@ linkbox.appendChild(new Element("a", {
 	title : "This is for easing development. Don't worry about it unless the devs tell you to use it.",
 	onclick : function(E) {
 		E.preventDefault();
-		for (var arg in swfArgs) if (arg.indexOf("rv")==0) delete swfArgs[arg];
+		for(var arg in swfArgs) if(arg.indexOf("rv")==0) delete swfArgs[arg];
 		opts.swfArgs = swfArgs;
 		opts.ver = rev;
 		opts.ua = navigator.userAgent;
@@ -345,7 +345,7 @@ mh.insertBefore(globals.toggler=new Element("a", {
 		E.preventDefault();
 		globals.isHidden = optionBox.style.display=="none";
 		this.textContent= (globals.isHidden ? "Hide" : "Show") + " YTHD Options";
-		if (globals.isHidden) {
+		if(globals.isHidden) {
 			var state = player.getPlayerState();
 			if(state == 2 || state == 0) globals.setStyle("marginTop", "450");
 		} else globals.setStyle("marginTop", "0");
@@ -360,17 +360,17 @@ unsafeWindow.stateChanged=function(state) {
 	switch(state) {
 	case 3 :
 	if(!globals.init) {
-		if (opts.jumpToPlayer) head.scrollIntoView(true);
+		globals.init = true;
+		if(opts.jumpToPlayer) head.scrollIntoView(true);
 		if(opts.autobuffer) {
 			player.seekTo(0, true);
-			globals.init = true;
 			player.pauseVideo();
 		}
 	}
 	break;
 	case 0 :
-	if (config.LIST_AUTO_PLAY_ON) location.href = config["LIST_PLAY_NEXT_URL" + (config.SHUFFLE_ENABLED ? "_WITH_SHUFFLE" : "")];
-	else if (opts.loop) {
+	if(config.LIST_AUTO_PLAY_ON) location.href = config["LIST_PLAY_NEXT_URL" + (config.SHUFFLE_ENABLED ? "_WITH_SHUFFLE" : "")];
+	else if(opts.loop) {
 		player.seekTo(0, true);
 		player.playVideo();
 	}
@@ -385,25 +385,25 @@ unsafeWindow.stateChanged=function(state) {
 	globals.setStyle("marginTop", "0");
 };
 unsafeWindow.onYouTubePlayerReady=function(A) {
-	if (player.getAttribute("wmode")!="opaque") return;
+	if(player.getAttribute("wmode")!="opaque") return;
 	player.setPlaybackQuality(["highres", "hd1080", "hd720", "large", "medium", "small"][opts.vq]);
 	var el = $("quicklist");
-	if (el) {
+	if(el) {
 		if(opts.qlKill) el.style.display = "none";
 		else el.setAttribute("data-autohide-mode", "on");
 	}
-	if (opts.fit) fitBig(true);
-	if (opts.min) {
+	if(opts.fit) fitBig(true);
+	if(opts.min) {
 		fitToWindow();
 		globals.setHeight(globals.getHeight(true));
-	} else if (opts.fit) unsafeWindow.onresize = fitToWindow;
-	if (opts.useVol && opts.vol.match(/(\d+)/)) player.setVolume(Number(RegExp.$1));
+	} else if(opts.fit) unsafeWindow.onresize = fitToWindow;
+	if(opts.useVol && opts.vol.match(/(\d+)/)) player.setVolume(Number(RegExp.$1));
 	unsafeWindow.sizeClicked = globals.handleSize;
 	player.addEventListener("onStateChange", "stateChanged");
 	player.addEventListener("SIZE_CLICKED", "sizeClicked");
 	player.addEventListener("NEXT_CLICKED", "yt.www.watch.player.onPlayerNextClicked");
 	player.addEventListener("NEXT_SELECTED", "yt.www.watch.player.onPlayerNextSelected");
-	if (opts.snapBack) {
+	if(opts.snapBack) {
 		unsafeWindow.newFmt=function(fmt) {
 			if(player.getPlaybackQuality()!=fmt) globals.handleSize(/hd(?:72|108)0|large/.test(fmt));
 		};
@@ -412,24 +412,24 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 	globals.lastHeight = player.offsetHeight;
 	player.focus();
 };
-if (opts.hidenotes) swfArgs.iv_load_policy="3";
-if (config.LIST_AUTO_PLAY_ON) swfArgs.playnext = "1";
-if (!opts.autoplay && !opts.autobuffer) swfArgs.autoplay="0";
-else if (opts.autoplay) swfArgs.autoplay="1";
+if(opts.hidenotes) swfArgs.iv_load_policy="3";
+if(config.LIST_AUTO_PLAY_ON) swfArgs.playnext = "1";
+if(!opts.autoplay && !opts.autobuffer) swfArgs.autoplay="0";
+else if(opts.autoplay) swfArgs.autoplay="1";
 var ads=new Array("infringe", "invideo", "ctb", "interstitial", "watermark");
-if (opts.hideRate) {
+if(opts.hideRate) {
 	ads.push("ratings_preroll");
 	ads.push("ratings_module");
 	ads.push("ratings3_module");
 	ads.push("ratings");
 }
-for (var i=ads.length-1;i>=0;i--) delete swfArgs[ads[i]];
+for(var i=ads.length-1;i>=0;i--) delete swfArgs[ads[i]];
 swfArgs.vq=["highres", "hd1080", "hd720", "large", "medium", "small"][opts.vq];
-if (swfArgs.fmt_map.indexOf("18")==0 && /3[457]|22/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/, "");
-else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map)) {
-	if (swfArgs.fmt_stream_map.split(",").length == 1) {
+if(swfArgs.fmt_map.indexOf("18")==0 && /3[457]|22/.test(swfArgs.fmt_map)) swfArgs.fmt_map=swfArgs.fmt_map.replace(/18.+?,/, "");
+else if(/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map)) {
+	if(swfArgs.fmt_stream_map.split(",").length == 1) {
 		// 240p default, 360p secret
-		if (location.search.indexOf("fmt=18")==-1) {
+		if(location.search.indexOf("fmt=18")==-1) {
 			location.replace(location.protocol + "//" + location.host +location.pathname + location.search + "&fmt=18" + location.hash);
 			return;
 		}
@@ -440,20 +440,20 @@ else if (/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map)) {
 		swfArgs.fmt_url_map = swfArgs.fmt_stream_map.replace(/\|\|tc\.v\d+\.cache\d+\.c\.youtube\.com/g, "");
 	}
 }
-if (location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
+if(location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
 	var start=0;
-	if (RegExp.$1) start += Number(RegExp.$1 + "0") * 6;
-	if (RegExp.$2) start += Number(RegExp.$2);
+	if(RegExp.$1) start += Number(RegExp.$1 + "0") * 6;
+	if(RegExp.$2) start += Number(RegExp.$2);
 	swfArgs.start = start;
 }
 var vars="";
-for (var arg in swfArgs) if (!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
+for(var arg in swfArgs) if(!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
 player.setAttribute("flashvars", vars);
 player.setAttribute("wmode", "opaque");
 player.src = purl;
 head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
 document.addEventListener("keydown", function(E) {
-	if ("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
+	if("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
 	switch (E.keyCode) {
 	case 83: globals.setHeight(globals.getHeight(true)); return;
 	case 80: player[(player.getPlayerState()==1 ? "pause" : "play") + "Video"](); return;
@@ -465,7 +465,7 @@ document.addEventListener("keydown", function(E) {
 	case 37: player.seekTo(Math.round(player.getCurrentTime()-1), true);return;
 	return;
 	}
-	if (E.ctrlKey)
+	if(E.ctrlKey)
 		switch (E.keyCode) {
 		case 38:
 		E.preventDefault();
@@ -489,10 +489,10 @@ head.appendChild(new Element("span", {
 head.appendChild(new Element("a", {
 	style : "font-size:12px;padding-top:3px;padding-left:3px;",
 	onclick : function() {
-		if (this.textContent=="mini mode on")
+		if(this.textContent=="mini mode on")
 		{
 			this.textContent = "mini mode off";
-			if (opts.fit) {
+			if(opts.fit) {
 				unsafeWindow.onresize = fitToWindow;
 				fitToWindow();
 			} else globals.setHeight(globals.lastHeight);
@@ -511,12 +511,12 @@ for(var fmt_map = swfArgs.fmt_stream_map.split(","), i = fmt_map.length - 1; i >
 	var s = fmt_map[i].split("|");
 	dls[s[0]] = s[1];
 }
-if (34 in dls) downloads[34]="hq flv";
-if (config.IS_HD_AVAILABLE || (35 in dls)) downloads[35]="super hq flv";
-if (config.IS_HD_AVAILABLE) {
+if(34 in dls) downloads[34]="hq flv";
+if(config.IS_HD_AVAILABLE || (35 in dls)) downloads[35]="super hq flv";
+if(config.IS_HD_AVAILABLE) {
 	downloads[22] = "720p mp4";
-	if (37 in dls) downloads[37] = "1080p mp4";
-	if (38 in dls) downloads[38] = "4k mp4";
+	if(37 in dls) downloads[37] = "1080p mp4";
+	if(38 in dls) downloads[38] = "4k mp4";
 }
 var trail = "&title=" + encodeURIComponent($("eow-title").title.replace(/"/g, "'"));
 function adjust(link) {
@@ -542,7 +542,7 @@ var flv=new Element("a", {
 	textContent : "flv"
 });
 adjust(block.appendChild(flv));
-for (var dl in downloads) {
+for(var dl in downloads) {
 	var temp=flv.cloneNode(false);
 	temp.appendChild(document.createTextNode(downloads[dl]));
 	if(dl in dls)
@@ -579,9 +579,9 @@ function getPurl() {
 }
 
 var config = unsafeWindow.yt.config_, purl = config.SWF_CONFIG.url;
-if (purl.indexOf("as3")==-1) {
+if(purl.indexOf("as3")==-1) {
 	purl = GM_getValue("purl");
-	if (purl == null) getPurl();
+	if(purl == null) getPurl();
 	else GM_xmlhttpRequest({
 		url : purl,
 		method : "HEAD",
