@@ -82,20 +82,19 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 	newOpts = new Array();
 document.title = document.title.substring(10);
 var opts = {
-	vq : new Array("Max Quality", new Array("240p", "360p", "480p", "720p", "1080p", "max"), "Please choose the maximum video quality your computer can handle."),
+	vq : new Array("Max Quality", new Array("240p", "360p", "480p", "720p", "1080p", "max"), "Please choose the maximum video quality your computer and network connection can handle."),
 	autoplay : new Array("Autoplay", true, "By default, YouTube autoplays all of it's videos."),
-	autobuffer : new Array("Autobuffer", false, "If you have a slow computer and/or a slow connection, turn this on to let the video download while it's paused, then you can hit the play button."),
-	hidenotes : new Array("Hide annotations", true, "Annotations are those annoying notes some users leave that say \"visit my site!\" or \"make sure to watch in HD!!\" in the video. But we already know that, right? You can turn them off if you want."),
+	autobuffer : new Array("Autobuffer", false, "If you have a slow connection, turn this on to let the video download while paused, until you hit the play button."),
+	hidenotes : new Array("Hide annotations", true, "Annotations are those annoying notes some users leave that say \"visit my site!\" or \"make sure to watch in HD!!\" in the video. You can turn them off."),
 	hideRate : new Array("Hide Warnings", false, "Choose this if you want to hide warnings about language, sex or violence."),
-	bigMode : new Array("Big mode", true, "Have a nice monitor? Like seeing things big? Turn this on. Ensures proper aspect ratio, and maximum viewing in the comfort of your browser."),
 	fit : new Array("Fit to window", true, "The player will size itself to the window, ensuring optimal screen use in windowed mode."),
 	min : new Array("Mini mode", false, "For those who use YouTube mainly for music, turn this on. Can also be toggled from the button."),
-	maxLock : new Array("True Resolution", false, "Turn this on to lock videos at their actual maximum resolution, if your monitor supports such enormous resolutions."),
+	maxLock : new Array("True Resolution", false, "Turn this on to lock videos at their actual maximum resolution. Not recommended for most users."),
 	useVol : new Array("Enabled Fixed Volume", false, "This will enabled the fixed volume feature (script sets volume to custom amount at the start of every video)."),
 	vol : new Array("Volume", "50", "The volume, as an integer, from 0 to 100."),
 	snapBack : new Array("Snap back", true, "Makes the video smaller if you turn off HD/HQ mid-video using the player's button."),
 	loop : new Array("Loop", false, "Are you a loopy fanatic? Turn this on! Goes well if you watch a lot of AMV's I hear."),
-	jumpToPlayer : new Array("Jump to player", true, "Especially with big mode on, this is nice. It scrolls down to the video for you."),
+	jumpToPlayer : new Array("Jump to player", true, "The script will scroll down to the video for you."),
 	tools : new Array("Script tools", true, "Display the script toolbox to the right of the video title."),
 	qlKill : new Array("Kill Quicklist", false, "Permanently removes the quicklist from view. Not recommended if you use playlists.")
 };
@@ -158,9 +157,20 @@ width:1px!important;height:1px!important;\
 	margin-right: 3px;\
 	margin-top: 4px;\
 } .loop.on {\
-	background-image: url(data:image/gif;base64,R0lGODlhEAAQAPQAAP/29v8AAP7w8P42Nv5/f/4FBf4kJP7Pz/6iov4VFf5ycv5iYv7c3P6Tk/6/v/5FRf5TUwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkKAAAAIf4aQ3JlYXRlZCB3aXRoIGFqYXhsb2FkLmluZm8AIf8LTkVUU0NBUEUyLjADAQAAACwAAAAAEAAQAAAFUCAgjmRpnqUwFGwhKoRgqq2YFMaRGjWA8AbZiIBbjQQ8AmmFUJEQhQGJhaKOrCksgEla+KIkYvC6SJKQOISoNSYdeIk1ayA8ExTyeR3F749CACH5BAkKAAAALAAAAAAQABAAAAVoICCKR9KMaCoaxeCoqEAkRX3AwMHWxQIIjJSAZWgUEgzBwCBAEQpMwIDwY1FHgwJCtOW2UDWYIDyqNVVkUbYr6CK+o2eUMKgWrqKhj0FrEM8jQQALPFA3MAc8CQSAMA5ZBjgqDQmHIyEAIfkECQoAAAAsAAAAABAAEAAABWAgII4j85Ao2hRIKgrEUBQJLaSHMe8zgQo6Q8sxS7RIhILhBkgumCTZsXkACBC+0cwF2GoLLoFXREDcDlkAojBICRaFLDCOQtQKjmsQSubtDFU/NXcDBHwkaw1cKQ8MiyEAIfkECQoAAAAsAAAAABAAEAAABVIgII5kaZ6AIJQCMRTFQKiDQx4GrBfGa4uCnAEhQuRgPwCBtwK+kCNFgjh6QlFYgGO7baJ2CxIioSDpwqNggWCGDVVGphly3BkOpXDrKfNm/4AhACH5BAkKAAAALAAAAAAQABAAAAVgICCOZGmeqEAMRTEQwskYbV0Yx7kYSIzQhtgoBxCKBDQCIOcoLBimRiFhSABYU5gIgW01pLUBYkRItAYAqrlhYiwKjiWAcDMWY8QjsCf4DewiBzQ2N1AmKlgvgCiMjSQhACH5BAkKAAAALAAAAAAQABAAAAVfICCOZGmeqEgUxUAIpkA0AMKyxkEiSZEIsJqhYAg+boUFSTAkiBiNHks3sg1ILAfBiS10gyqCg0UaFBCkwy3RYKiIYMAC+RAxiQgYsJdAjw5DN2gILzEEZgVcKYuMJiEAOw==);\
+	background-image: url(data:image/gif;base64,R0lGODlhEAAQAPQAAP/29v8AAP7w8P42Nv5/f/4FBf4kJP7Pz/6iov4VFf5ycv5iYv7c3P6Tk\
+/6/v/5FRf5TUwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkKAAAAIf4aQ3JlYXRlZCB3aXRoIGFqYXhsb2FkLmluZm8AIf8L\
+TkVUU0NBUEUyLjADAQAAACwAAAAAEAAQAAAFUCAgjmRpnqUwFGwhKoRgqq2YFMaRGjWA8AbZiIBbjQQ8AmmFUJEQhQGJhaKOrCksgEla+KIkYvC6SJKQOISoNSYdeIk1\
+ayA8ExTyeR3F749CACH5BAkKAAAALAAAAAAQABAAAAVoICCKR9KMaCoaxeCoqEAkRX3AwMHWxQIIjJSAZWgUEgzBwCBAEQpMwIDwY1FHgwJCtOW2UDWYIDyqNVVkUbYr6\
+CK+o2eUMKgWrqKhj0FrEM8jQQALPFA3MAc8CQSAMA5ZBjgqDQmHIyEAIfkECQoAAAAsAAAAABAAEAAABWAgII4j85Ao2hRIKgrEUBQJLaSHMe8zgQo6Q8sxS7RIhILhBk\
+gumCTZsXkACBC+0cwF2GoLLoFXREDcDlkAojBICRaFLDCOQtQKjmsQSubtDFU/NXcDBHwkaw1cKQ8MiyEAIfkECQoAAAAsAAAAABAAEAAABVIgII5kaZ6AIJQCMRTFQKiD\
+Qx4GrBfGa4uCnAEhQuRgPwCBtwK+kCNFgjh6QlFYgGO7baJ2CxIioSDpwqNggWCGDVVGphly3BkOpXDrKfNm/4AhACH5BAkKAAAALAAAAAAQABAAAAVgICCOZGmeqEAMRT\
+EQwskYbV0Yx7kYSIzQhtgoBxCKBDQCIOcoLBimRiFhSABYU5gIgW01pLUBYkRItAYAqrlhYiwKjiWAcDMWY8QjsCf4DewiBzQ2N1AmKlgvgCiMjSQhACH5BAkKAAAALAAA\
+AAAQABAAAAVfICCOZGmeqEgUxUAIpkA0AMKyxkEiSZEIsJqhYAg+boUFSTAkiBiNHks3sg1ILAfBiS10gyqCg0UaFBCkwy3RYKiIYMAC+RAxiQgYsJdAjw5DN2gILzEEZg\
+VcKYuMJiEAOw==);\
 } .loop.off {\
-	background-image: url(data:image/gif;base64,R0lGODlhEAAQAPMJAG4AAYoAAJUAAKkAALYAAcYAANkBAOYBAP8AAP///wAAAAAAAAAAAAAAAAAAAAAAACH5BAEKAAkAIf4NQnkgSmVyb2VuejByCgAsAAAAABAAEAAABE0wyUmrvTYMQoIUWHIYBiEFwnAdiKFKRFodRWGAE/FORiEBFRulhiFOjBZkolcBJoSUDUXQKxwqA5lkYEBcLVlPgmv4XnABzkAcarslEQA7);\
+	background-image: url(data:image/gif;base64,R0lGODlhEAAQAPMJAG4AAYoAAJUAAKkAALYAAcYAANkBAOYBAP8AAP///wAAAAAAAAAAAAAAAAAAAA\
+AAACH5BAEKAAkAIf4NQnkgSmVyb2VuejByCgAsAAAAABAAEAAABE0wyUmrvTYMQoIUWHIYBiEFwnAdiKFKRFodRWGAE/FORiEBFRulhiFOjBZkolcBJoSUDUXQKxwqA5lk\
+YEBcLVlPgmv4XnABzkAcarslEQA7);\
 } #version {\
 	float : right;\
 	padding-left: 7px !important;padding-right: 3px;\
@@ -255,6 +265,7 @@ for (var opt in opts) {
 	opts[opt]=val;
 	newOpts.push(a);
 }
+if(opts.maxLock) opts.fit = true;
 optionBox = optionBox.parentNode;
 var linkbox;
 optionBox.appendChild(linkbox=new Element("div",
@@ -342,20 +353,19 @@ mh.insertBefore(globals.toggler=new Element("a", {
 		globals.refresh();
 	}
 }), last.nextSibling);
-if (!opts.bigMode && (opts.maxLock || opts.fit)) opts.bigMode = true;
 head.addEventListener("click", function() {
 	this.scrollIntoView(true);
 }, false);
-if (opts.jumpToPlayer) head.scrollIntoView(true);
 unsafeWindow.stateChanged=function(state) {
 	switch(state) {
 	case 3 :
-	if(opts.autobuffer) {
-		if(!globals.init) {
+	if(!globals.init) {
+		if (opts.jumpToPlayer) head.scrollIntoView(true);
+		if(opts.autobuffer) {
 			player.seekTo(0, true);
 			globals.init = true;
+			player.pauseVideo();
 		}
-		player.pauseVideo();
 	}
 	break;
 	case 0 :
@@ -382,7 +392,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		if(opts.qlKill) el.style.display = "none";
 		else el.setAttribute("data-autohide-mode", "on");
 	}
-	if (opts.bigMode) fitBig(true);
+	if (opts.fit) fitBig(true);
 	if (opts.min) {
 		fitToWindow();
 		globals.setHeight(globals.getHeight(true));
