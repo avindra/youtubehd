@@ -322,9 +322,15 @@ linkbox.appendChild(new Element("a", {
 	}
 }));
 document.body.appendChild(optionBox);
-$("masthead-utility").childNodes[1].appendChild(globals.toggler=new Element("a", {
+var mh = $("masthead-utility");
+var last = mh.childNodes[2];
+last.className="";
+last.style.borderRight = "1px solid #CCCCCC";
+last.style.marginRight = "10px";
+mh.insertBefore(globals.toggler=new Element("a", {
 	style : "font-weight:bold; padding: 4px 10px; background-color: #0033CC; color: white; -moz-border-radius: 8px;",
 	textContent : "Show YTHD Options",
+	className : "split",
 	onclick : function(E) {
 		E.preventDefault();
 		globals.isHidden = optionBox.style.display=="none";
@@ -336,7 +342,7 @@ $("masthead-utility").childNodes[1].appendChild(globals.toggler=new Element("a",
 		optionBox.style.display=globals.isHidden ? "inline" : "none";
 		globals.refresh();
 	}
-}));
+}), mh.childNodes[3]);
 if (!opts.bigMode && (opts.maxLock || opts.fit)) opts.bigMode = true;
 head.addEventListener("click", function() {
 	this.scrollIntoView(true);
