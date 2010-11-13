@@ -322,8 +322,7 @@ linkbox.appendChild(new Element("a", {
 	}
 }));
 document.body.appendChild(optionBox);
-var mh = $("masthead-utility");
-var last = mh.childNodes[2];
+var mh = $("masthead-utility"), last = mh.childNodes[2];
 last.className="";
 last.style.borderRight = "1px solid #CCCCCC";
 last.style.marginRight = "10px";
@@ -342,7 +341,7 @@ mh.insertBefore(globals.toggler=new Element("a", {
 		optionBox.style.display=globals.isHidden ? "inline" : "none";
 		globals.refresh();
 	}
-}), mh.childNodes[3]);
+}), last.nextSibling);
 if (!opts.bigMode && (opts.maxLock || opts.fit)) opts.bigMode = true;
 head.addEventListener("click", function() {
 	this.scrollIntoView(true);
