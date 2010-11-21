@@ -145,6 +145,7 @@ GM_addStyle("#vidtools > * {\
 	position : relative;\
 	z-index : 6 !important;\
 	float:right;\
+	display:inline;\
 }\
 .yt-menulink-menu {z-index:700 !important}\
 .yt-menulink {z-index:4 !important}\
@@ -361,7 +362,10 @@ unsafeWindow.stateChanged=function(state) {
 	case 3 :
 	if(!globals.init) {
 		globals.init = true;
-		if(opts.jumpToPlayer) head.scrollIntoView(true);
+		if(opts.jumpToPlayer) {
+			head.scrollIntoView(true);
+			globals.refresh();
+		}
 		if(opts.autobuffer) {
 			player.seekTo(0, true);
 			player.pauseVideo();
