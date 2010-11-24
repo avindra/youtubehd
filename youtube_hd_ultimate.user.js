@@ -144,7 +144,7 @@ function fitBig(force) {
 GM_addStyle("#vidtools > * {\
 	position : relative;\
 	z-index : 6 !important;\
-	float:right;\\n\
+	float:right;\
 } #vidtools {\
   display:inline;\
 }\
