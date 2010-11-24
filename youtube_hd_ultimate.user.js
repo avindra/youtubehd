@@ -144,8 +144,9 @@ function fitBig(force) {
 GM_addStyle("#vidtools > * {\
 	position : relative;\
 	z-index : 6 !important;\
-	float:right;\
-	display:inline;\
+	float:right;\\n\
+} #vidtools {\
+  display:inline;\
 }\
 .yt-menulink-menu {z-index:700 !important}\
 .yt-menulink {z-index:4 !important}\
