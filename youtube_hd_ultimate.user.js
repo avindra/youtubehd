@@ -5,10 +5,10 @@
 // @include       http*://youtube.com/watch*
 // @namespace     #aVg
 // @license       CC-BY-NC-SA http://creativecommons.org/licenses/by-nc-sa/3.0/
-// @version       1.2.8
+// @version       1.2.9
 // ==/UserScript==
 if(!$("watch-headline-title")) location.replace(location.href.replace("#!", "?"));
-const rev="1.2.8";
+const rev="1.2.9";
 function Params(A) {
 	var obj = {};
 	var curProp = "", curValue = "";
@@ -72,9 +72,9 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 			unsafeWindow.onresize = grow && opts.fit ? fitToWindow : null;
 		},
 		isWide : false,
-		refresh :  function() {
+		refresh : function() {
 			var pos = window.scrollY;
-			window.scroll(0, pos + 1);
+			window.scroll(0, pos - 1);
 			window.scroll(0, pos);
 		}
 	},
@@ -146,9 +146,8 @@ GM_addStyle("#vidtools > * {\
 	z-index : 6 !important;\
 	float:right;\
 } #vidtools {\
-  display:inline;\
-}\
-.yt-menulink-menu {z-index:700 !important}\
+	display:inline;\
+} .yt-menulink-menu {z-index:700 !important}\
 .yt-menulink {z-index:4 !important}\
 .yt-rounded {background-color:white!important}\
 #movie_player {\
@@ -331,7 +330,11 @@ linkbox.appendChild(new Element("a", {
 		opts.ver = rev;
 		opts.ua = navigator.userAgent;
 		opts.flash = unsafeWindow.navigator.plugins["Shockwave Flash"].description;
-		prompt("This is your debugString. Copy it with CTRL + X. If posting on userscripts.org, please use pastebin.com to post it.", opts.toSource());
+		opts.screen = {
+			cur : { x : window.innerWidth, y : window.innerHeight},
+			max : { x : screen.width, y : screen.height}
+		};
+		prompt("This is your debugString. Copy it with CTRL + X. If you don't know how to post code on userscripts.org, please use a pastebin to post it.", opts.toSource());
 	}
 }));
 document.body.appendChild(optionBox);
