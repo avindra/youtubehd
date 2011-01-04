@@ -46,8 +46,9 @@ function update(resp) {
 	});
 }
 var now=new Date().getTime();
-if((GM_getValue("lastCheck"), now) <= (now - 86400000)) {
-	GM_setValue("lastCheck", now);
+var last = GM_getValue("lastCheck");
+if(!last || last <= (now - 86400000)) {
+	GM_setValue("lastCheck", now.toString());
 	update(false);
 }
 function script() {
@@ -543,7 +544,7 @@ function adjust(link) {
 		}
 	});
 }
-var info=$("watch-ratings-views"), block=new Element("div");
+var block=new Element("div");
 block.appendChild(document.createTextNode("Download this video as a(n): "));
 var flv=new Element("a", {
 	href : "/get_video?asv&video_id="+swfArgs.video_id+"&t="+swfArgs.t,
