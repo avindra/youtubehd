@@ -47,7 +47,7 @@ function update(resp) {
 }
 var now=new Date().getTime();
 var last = GM_getValue("lastCheck");
-if(!last || last <= (now - 86400000)) {
+if(!last || ((now - last) >= 86400000)) {
 	GM_setValue("lastCheck", now.toString());
 	update(false);
 }
@@ -496,7 +496,7 @@ head.appendChild(new Element("span", {
 	}
 }));
 head.appendChild(new Element("a", {
-	style : "font-size:12px;padding-top:3px;padding-left:3px;",
+	style : "font-size:12px;",
 	onclick : function() {
 		if(this.textContent=="mini mode on")
 		{
