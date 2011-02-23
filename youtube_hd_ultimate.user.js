@@ -378,7 +378,16 @@ unsafeWindow.stateChanged=function(state) {
 	}
 	break;
 	case 0 :
-	if(config.LIST_AUTO_PLAY_ON) location.href = config["LIST_PLAY_NEXT_URL" + (config.SHUFFLE_ENABLED ? "_WITH_SHUFFLE" : "")];
+	if(config.LIST_AUTO_PLAY_ON)  {
+		if(config.SHUFFLE_ENABLED) {}
+		var l = document.evaluate("//li[contains(@class, 'quicklist-item-playing')]", document.body, null, 9, null).singleNodeValue;
+		if(l) {
+			l = l.nextSibling;
+			if(l) {
+				location.href = l.firstChild.href; 
+			}
+		}
+	}
 	else if(opts.loop) {
 		player.seekTo(0, true);
 		player.playVideo();
@@ -564,7 +573,8 @@ for(var dl in downloads) {
 	block.appendChild(document.createTextNode(" // "));
 	block.appendChild(temp);
 }
-$("watch-info").appendChild(block);
+var commts = $("watch-discussion");
+commts.parentNode.insertBefore(block, commts);
 var tail = "&fmt=", highest = "";
 for(var dls in downloads) highest = dls;
 tail += highest;
