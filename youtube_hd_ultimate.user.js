@@ -464,11 +464,15 @@ if(location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
 	if(RegExp.$2) start += Number(RegExp.$2);
 	swfArgs.start = start;
 }
+swfArgs.enablejsapi = 1;
 var vars="";
 for(var arg in swfArgs) if(!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
-player.setAttribute("flashvars", vars);
+player.setAttribute("flashvars", vars.substring(1).replace(/%20/g, "+"));
 player.setAttribute("wmode", "opaque");
+var container = player.parentNode;
+container.removeChild(player);
 player.src = purl;
+container.appendChild(player);
 head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
 document.addEventListener("keydown", function(E) {
 	if("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
