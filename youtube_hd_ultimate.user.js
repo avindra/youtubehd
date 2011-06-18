@@ -52,6 +52,8 @@ if(!last || ((now - last) >= 86400000)) {
 	update(false);
 }
 function script() {
+try{
+
 var player=unsafeWindow.document.getElementById("movie_player"),
 	swfArgs = new Params(player.getAttribute("flashvars")),
 	optionBox,
@@ -433,7 +435,6 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 if(opts.hidenotes) swfArgs.iv_load_policy="3";
 if(config.LIST_AUTO_PLAY_ON) swfArgs.playnext = "1";
 if(!opts.autoplay && !opts.autobuffer) swfArgs.autoplay="0";
-else if(opts.autoplay) swfArgs.autoplay="1";
 var ads=new Array("infringe", "invideo", "ctb", "interstitial", "watermark");
 if(opts.hideRate) {
 	ads.push("ratings_preroll");
@@ -455,7 +456,9 @@ else if(/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_map)) {
 		swfArgs.fmt_stream_map = swfArgs.fmt_stream_map.match(/\|([^,]+)/)[1].replace(/itag=\d+/, "itag=18");
 		swfArgs.fmt_list = "18/640x360/9/0/115," + swfArgs.fmt_list;
 		swfArgs.fmt_map = swfArgs.fmt_list;
+		console.log(swfArgs.fmt_url_map);
 		swfArgs.fmt_url_map = swfArgs.fmt_stream_map.replace(/\|\|tc\.v\d+\.cache\d+\.c\.youtube\.com/g, "");
+		console.log(swfArgs.fmt_url_map);
 	}
 }
 if(location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
@@ -464,15 +467,17 @@ if(location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
 	if(RegExp.$2) start += Number(RegExp.$2);
 	swfArgs.start = start;
 }
-swfArgs.enablejsapi = 1;
+//swfArgs.enablejsapi = 1;
 var vars="";
 for(var arg in swfArgs) if(!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
+GM_log(player.getAttribute("flashvars"));
 player.setAttribute("flashvars", vars.substring(1).replace(/%20/g, "+"));
+GM_log(player.getAttribute("flashvars"));
 player.setAttribute("wmode", "opaque");
 var container = player.parentNode;
 container.removeChild(player);
 player.src = purl;
-container.appendChild(player);
+//container.appendChild(player);
 head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
 document.addEventListener("keydown", function(E) {
 	if("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
@@ -584,6 +589,10 @@ for(var dls in downloads) highest = dls;
 tail += highest;
 config.SHARE_URL += tail;
 config.SHARE_URL_SHORT += tail;
+
+
+}catch(e){alert(e)}
+
 }
 
 function getPurl() {
@@ -601,7 +610,7 @@ function getPurl() {
 	});
 }
 
-var config = unsafeWindow.yt.config_, purl = config.SWF_CONFIG.url;
+var config = unsafeWindow.yt.config_, purl = config.PLAYER_CONFIG.url;
 if(purl.indexOf("as3")==-1) {
 	purl = GM_getValue("purl");
 	if(purl == null) getPurl();
