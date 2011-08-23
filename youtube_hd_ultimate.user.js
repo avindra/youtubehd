@@ -84,7 +84,7 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 	},
 	head=$("watch-headline-title"),
 	newOpts = new Array();
-document.title = document.title.substring(10);
+document.title = document.title.substring(0, document.title.length - 10);
 var opts = {
 	vq : new Array("Max Quality", new Array("240p", "360p", "480p", "720p", "1080p", "max"), "Please choose the maximum video quality your computer and network connection can handle."),
 	autoplay : new Array("Autoplay", true, "By default, YouTube autoplays all of it's videos."),
@@ -443,9 +443,9 @@ else if(/5\/(0|320x240)\/7\/0\/0/.test(swfArgs.fmt_list)) {
 			return;
 		}
 	} else if(!/(?:18|22|3[457])\//.test(swfArgs.fmt_list)) {
-		// swfArgs.fmt_stream_map = swfArgs.fmt_stream_map.match(/\|([^,]+)/)[1].replace(/itag=\d+/, "itag=18");
+		swfArgs.url_encoded_fmt_stream_map = swfArgs.url_encoded_fmt_stream_map.match(/\|([^,]+)/)[1].replace(/itag=\d+/, "itag=18");
 		swfArgs.fmt_list = "18/640x360/9/0/115," + swfArgs.fmt_list;
-		// swfArgs.fmt_url_map = swfArgs.fmt_stream_map.replace(/\|\|tc\.v\d+\.cache\d+\.c\.youtube\.com/g, "");
+		swfArgs.url_encoded_fmt_stream_map = swfArgs.url_encoded_fmt_stream_map.replace(/\|\|tc\.v\d+\.cache\d+\.c\.youtube\.com/g, "");
 	}
 }
 
@@ -455,11 +455,11 @@ if(location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
 	if(RegExp.$2) start += Number(RegExp.$2);
 	swfArgs.start = start;
 }
-//swfArgs.enablejsapi = 1;
 var vars="";
 for(var arg in swfArgs) if(!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
 player.setAttribute("flashvars", vars.substring(1).replace(/%20/g, "+"));
 player.src += "?reload";
+unsafeWindow.console.log(swfArgs);
 head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
 document.addEventListener("keydown", function(E) {
 	if("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
@@ -515,11 +515,12 @@ head.appendChild(new Element("a", {
 }));
 }
 
-/*
+
 var downloads={5 : "terrible flv", 17 : "3gp", 18 : "mp4", 36 : "hq 3gp"}, dls = {};
-for(var fmt_list = swfArgs.fmt_stream_map.split(","), i = fmt_list.length - 1; i >= 0; --i) {
-	var s = fmt_list[i].split("|");
-	dls[s[0]] = s[1];
+for(var fmt_list = swfArgs.url_encoded_fmt_stream_map.split(","), i = fmt_list.length - 1; i >= 0; --i) {
+	fmt_list[i] = fmt_list[i].substring(4);
+	var itagrgx = /itag=(\d+)/;
+	dls[fmt_list[i].match(itagrgx)[1]] = decodeURIComponent(fmt_list[i].replace(itagrgx, ""));
 }
 if(34 in dls) downloads[34]="hq flv";
 if(config.IS_HD_AVAILABLE || (35 in dls)) downloads[35]="super hq flv";
@@ -573,7 +574,6 @@ tail += highest;
 
 config.SHARE_URL += tail;
 config.SHARE_URL_SHORT += tail;
-*/
 
 }catch(e){console.log(e)}
 
