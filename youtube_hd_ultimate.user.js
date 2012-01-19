@@ -53,8 +53,6 @@ if(!last || ((now - last) >= 86400000)) {
 	update(false);
 }
 function script() {
-try{
-
 var player=unsafeWindow.document.getElementById("movie_player"),
 	swfArgs = new Params(player.getAttribute("flashvars")),
 	optionBox,
@@ -342,12 +340,13 @@ linkbox.appendChild(new Element("a", {
 	}
 }));
 document.body.appendChild(optionBox);
-var mh = $("masthead-sections"), last = mh.childNodes[4];
-last.className="";
-last.style.borderRight = "1px solid #CCCCCC";
-last.style.marginRight = "10px";
-mh.insertBefore(globals.toggler=new Element("a", {
-	style : "font-weight:bold; padding: 4px 10px; background-color: #0033CC; color: white; -moz-border-radius: 8px;",
+var mh = $("masthead-nav");
+mh.appendChild(new Element("span", {
+	className : "masthead-link-separator",
+	textContent : " | "
+}));
+mh.appendChild(globals.toggler=new Element("a", {
+	style : "margin-left:7px; font-weight:bold; padding: 4px 10px; background-color: #0033CC; color: white; -moz-border-radius: 8px;",
 	textContent : "Show YTHD Options",
 	className : "split",
 	onclick : function(E) {
@@ -357,7 +356,7 @@ mh.insertBefore(globals.toggler=new Element("a", {
 		optionBox.style.display=globals.isHidden ? "inline" : "none";
 		globals.refresh();
 	}
-}), last.nextSibling);
+}));
 head.addEventListener("click", function() {
 	this.scrollIntoView(true);
 }, false);
@@ -402,7 +401,7 @@ unsafeWindow.onYouTubePlayerReady=function(A) {
 		if(opts.qlKill) el.style.display = "none";
 		else el.setAttribute("data-autohide-mode", "on");
 	}
-	if(opts.fit) fitBig(true);
+	if(opts.fit) fitToWindow();
 	if(opts.min) {
 		fitToWindow();
 		globals.setHeight(globals.getHeight(true));
@@ -575,8 +574,6 @@ tail += highest;
 config.SHARE_URL += tail;
 config.SHARE_URL_SHORT += tail;
 
-}catch(e){console.log(e)}
-
 }
 
 function getPurl() {
@@ -584,9 +581,9 @@ function getPurl() {
 		url : "http://www.youtube.com/watch?v=-AIwkpCH1yA",
 		method : "GET",
 		onload : function(A) {
-			if(A.responseText.match(/<param name=\\"movie\\" value=\\"([^"]+)/))
+			if(A.responseText.match(/x-shockwave-flash"\s+src="([^"]+)/))
 			{
-				purl = RegExp.$1.replace(/\\/g, "");
+				purl = RegExp.$1;
 				GM_setValue("purl", purl);
 				script();
 			} else alert("Error retrieving url for the new player!\n\nIf you feel this is a mistake on my part, please let me know: http://userscripts.org/scripts/show/31864");
@@ -594,7 +591,7 @@ function getPurl() {
 	});
 }
 
-var config = unsafeWindow.yt.config_, purl = config.PLAYER_CONFIG.url;
+var config = unsafeWindow.yt.config_, purl = unsafeWindow.yt.playerConfig.url;
 if(purl.indexOf("as3")==-1) {
 	purl = GM_getValue("purl");
 	if(purl == null) getPurl();
