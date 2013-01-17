@@ -4,6 +4,10 @@
 // @include       http*://www.youtube.com/watch*
 // @include       http*://youtube.com/watch*
 // @namespace     #aVg
+// @grant       GM_addStyle
+// @grant       GM_getValue
+// @grant       GM_setValue
+// @grant       GM_xmlhttpRequest
 // @license       CC-BY-NC-SA http://creativecommons.org/licenses/by-nc-sa/3.0/
 // @version       1.2.9
 // ==/UserScript==
@@ -53,7 +57,7 @@ if(!last || ((now - last) >= 86400000)) {
 	update(false);
 }
 function script() {
-var player=unsafeWindow.document.getElementById("movie_player"),
+var player=document.getElementById("movie_player"),
 	swfArgs = new Params(player.getAttribute("flashvars")),
 	optionBox,
 	globals = {
@@ -70,6 +74,7 @@ var player=unsafeWindow.document.getElementById("movie_player"),
 			this.setStyle("width", v);
 		},
 		handleSize : function(grow) {
+			alert("test");
 			fitBig(grow);
 			unsafeWindow.onresize = grow && opts.fit ? fitToWindow : null;
 		},
@@ -198,12 +203,14 @@ YEBcLVlPgmv4XnABzkAcarslEQA7);\
 	text-decoration: underline;\
 	display: block;\
 	font-size: 12px;\
+	margin-top:7px;\
 } #opts input, #opts select {\
 	margin-left: 3px;\
 	padding-left: 4px;\
 } #opts label {\
 	display : block;\
 	padding : 2px;\
+	cursor:pointer;\
 } #opts label:hover {text-shadow: 1px 2px 1px yellow !important;}\
 #opts label.on {\
 	font-style : italic;\
@@ -292,7 +299,8 @@ optionBox.appendChild(new Element("a", {
 		optionBox.style.display="none";
 	}
 	}, new Array(
-		new Element("span", {
+		new Element("a", {
+			className : "yt-uix-button-default yt-uix-button",
 			textContent : "Save Options"
 		})
 	)
@@ -340,15 +348,11 @@ linkbox.appendChild(new Element("a", {
 	}
 }));
 document.body.appendChild(optionBox);
-var mh = $("masthead-nav");
-mh.appendChild(new Element("span", {
-	className : "masthead-link-separator",
-	textContent : " | "
-}));
-mh.appendChild(globals.toggler=new Element("a", {
-	style : "margin-left:7px; font-weight:bold; padding: 4px 10px; background-color: #0033CC; color: white; -moz-border-radius: 8px;",
+var mh = $("yt-masthead-signin");
+mh.appendChild(globals.toggler=new Element("button", {
+	style : "margin-left:7px; font-weight:bold; background-color: #0033CC; color: white; -moz-border-radius: 8px;",
 	textContent : "Show YTHD Options",
-	className : "split",
+	className : "yt-uix-button-primary yt-uix-button",
 	onclick : function(E) {
 		E.preventDefault();
 		globals.isHidden = optionBox.style.display=="none";
@@ -357,6 +361,7 @@ mh.appendChild(globals.toggler=new Element("a", {
 		globals.refresh();
 	}
 }));
+
 head.addEventListener("click", function() {
 	this.scrollIntoView(true);
 }, false);
@@ -393,9 +398,19 @@ unsafeWindow.stateChanged=function(state) {
 	return;
 	}
 };
+
+function guaranteeExecute(code) {
+	console.log(code);
+	location.href = "javascript:setTimeout(function() {" + code + "}, 10); void(0);";
+}
+
 unsafeWindow.onYouTubePlayerReady=function(A) {
-	player = unsafeWindow.document.getElementById("movie_player").wrappedJSObject;
-	player.setPlaybackQuality(["highres", "hd1080", "hd720", "large", "medium", "small"][opts.vq]);
+	console.log("READY FREDDY");
+	guaranteeExecute('player = document.getElementById("movie_player");');
+	guaranteeExecute('player.setPlaybackQuality(["highres", "hd1080", "hd720", "large", "medium", "small"]['+opts.vq+'])');
+
+	console.log($("movie_player").setPlaybackQuality);
+
 	var el = $("quicklist");
 	if(el) {
 		if(opts.qlKill) el.style.display = "none";
@@ -457,31 +472,30 @@ if(location.hash.match(/t=(?:(\d+)m)?(?:(\d+)s?)?/)) {
 var vars="";
 for(var arg in swfArgs) if(!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
 player.setAttribute("flashvars", vars.substring(1).replace(/%20/g, "+"));
-player.src += "?reload";
 unsafeWindow.console.log(swfArgs);
 head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
 document.addEventListener("keydown", function(E) {
 	if("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
 	switch (E.keyCode) {
 	case 83: globals.setHeight(globals.getHeight(true)); return;
-	case 80: player[(player.getPlayerState()==1 ? "pause" : "play") + "Video"](); return;
+	case 80: guaranteeExecute('player[(player.getPlayerState()==1 ? "pause" : "play") + "Video"]()'); return;
 	case 82: player.seekTo(0, true); return;
 	case 77: player[player.isMuted() ? "unMute" : "mute"](); return;
 	case 69: player.seekTo(player.getDuration(), true); return;
 	case 66: fitBig(); return;
-	case 39: player.seekTo(player.getCurrentTime()+.5, true);return;
-	case 37: player.seekTo(Math.round(player.getCurrentTime()-1), true);return;
+	case 39: guaranteeExecute('player.seekTo(player.getCurrentTime()+.5, true)');return;
+	case 37: guaranteeExecute('player.seekTo(Math.round(player.getCurrentTime()-1), true)');return;
 	return;
 	}
 	if(E.ctrlKey)
 		switch (E.keyCode) {
 		case 38:
 		E.preventDefault();
-		player.setVolume(player.getVolume() + 4);
+		guaranteeExecute("player.setVolume(player.getVolume() + 4)");
 		return;
 		case 40:
 		E.preventDefault();
-		player.setVolume(player.getVolume() - 4);
+		guaranteeExecute("player.setVolume(player.getVolume() - 4)");
 		return;
 		}
 }, false);
@@ -518,8 +532,8 @@ head.appendChild(new Element("a", {
 var downloads={5 : "terrible flv", 17 : "3gp", 18 : "mp4", 36 : "hq 3gp"}, dls = {};
 for(var fmt_list = swfArgs.url_encoded_fmt_stream_map.split(","), i = fmt_list.length - 1; i >= 0; --i) {
 	fmt_list[i] = fmt_list[i].substring(4);
-	var itagrgx = /itag=(\d+)/;
-	dls[fmt_list[i].match(itagrgx)[1]] = decodeURIComponent(fmt_list[i].replace(itagrgx, ""));
+	// var itagrgx = /itag=(\d+)/;
+	// dls[fmt_list[i].match(itagrgx)[1]] = decodeURIComponent(fmt_list[i].replace(itagrgx, ""));
 }
 if(34 in dls) downloads[34]="hq flv";
 if(config.IS_HD_AVAILABLE || (35 in dls)) downloads[35]="super hq flv";
@@ -528,7 +542,7 @@ if(config.IS_HD_AVAILABLE) {
 	if(37 in dls) downloads[37] = "1080p mp4";
 	if(38 in dls) downloads[38] = "4k mp4";
 }
-var trail = "&title=" + encodeURIComponent($("eow-title").title.replace(/"/g, "'"));
+var trail = "&title=" + encodeURIComponent(document.querySelector("#watch-headline-title > span").title.replace(/"/g, "'"));
 function adjust(link) {
 	var r = GM_xmlhttpRequest({
 		url : link.href,
@@ -537,7 +551,7 @@ function adjust(link) {
 			switch(A.readyState) {
 			case 2:
 			case 3:
-				r.abort();
+				// abort
 				break;
 			case 4:
 				link.href = A.finalUrl + trail;
@@ -565,7 +579,7 @@ for(var dl in downloads) {
 	block.appendChild(document.createTextNode(" // "));
 	block.appendChild(temp);
 }
-var commts = $("watch-discussion");
+var commts = $("watch7-discussion");
 commts.parentNode.insertBefore(block, commts);
 var tail = "&fmt=", highest = "";
 for(var dls in downloads) highest = dls;
@@ -604,4 +618,10 @@ if(purl.indexOf("as3")==-1) {
 			else getPurl();
 		}
 	});
-} else script();
+} else {
+	try{
+		script();
+	} catch(e) {
+		alert(e);
+	}
+}
