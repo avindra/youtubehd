@@ -11,7 +11,8 @@
 // @license       CC-BY-NC-SA http://creativecommons.org/licenses/by-nc-sa/3.0/
 // @version       1.3.0-dev
 // ==/UserScript==
-if(self!=top) return;
+(function() {
+if (self!=top) return;
 if(!$("watch-headline-title")) location.replace(location.href.replace("#!", "?"));
 var config = unsafeWindow.yt.config_;
 const rev="1.3.0-dev";
@@ -382,7 +383,7 @@ function guaranteeExecute(code) {
 }
 
 function contentEval(source) {
-	if(typeof source == "function") source = '(' + source + ')();'
+	if(typeof source == "function") source = '(' + source + ')();';
 
 	var script = document.createElement('script');
 	script.setAttribute("type", "application/javascript");
@@ -393,7 +394,7 @@ function contentEval(source) {
 
 contentEval (
 	"opts = " + JSON.stringify(opts) + "; " + 
-	"globals = " + JSON.stringify(globals) + ";";
+	"globals = " + JSON.stringify(globals) + ";"
 );
 
 contentEval(function() {
@@ -615,3 +616,4 @@ script();
 } catch(e )  {
 	alert(e);
 }
+})();
