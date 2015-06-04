@@ -346,8 +346,8 @@ linkbox.appendChild(new Element("a", {
 }));
 document.body.appendChild(optionBox);
 var mh = $("yt-masthead-user");
-mh.appendChild(globals.toggler=new Element("button", {
-	style : "margin-left:7px; font-weight:bold; background-color: #0033CC; color: white; -moz-border-radius: 8px;",
+mh.insertBefore(globals.toggler=new Element("button", {
+	style : "margin-right:5px",
 	textContent : "Show YTHD Options",
 	className : "yt-uix-button-primary yt-uix-button",
 	onclick : function(E) {
@@ -357,7 +357,7 @@ mh.appendChild(globals.toggler=new Element("button", {
 		optionBox.style.display=globals.isHidden ? "inline" : "none";
 		globals.refresh();
 	}
-}));
+}), mh.childNodes[0]);
 
 head.addEventListener("click", function() {
 	this.scrollIntoView(true);
