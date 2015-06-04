@@ -37,7 +37,7 @@ if(!last || ((now - last) >= 86400000)) {
 }
 function script() {
 var player=document.getElementById("movie_player");
-var swfArgs = unsafeWindow.ytplayer.config;
+var swfArgs = unsafeWindow.ytplayer.config.args;
 
 var optionBox,
 	globals = {
@@ -67,7 +67,7 @@ var optionBox,
 	},
 	head=$("watch-headline-title"),
 	newOpts = new Array();
-document.title = document.title.substring(0, document.title.length - 10);
+
 var opts = {
 	vq : new Array("Max Quality", new Array("240p", "360p", "480p", "720p", "1080p", "max"), "Please choose the maximum video quality your computer and network connection can handle."),
 	autoplay : new Array("Autoplay", true, "By default, YouTube autoplays all of it's videos."),
@@ -97,8 +97,7 @@ function Element(A, B, C, D) {
 	if(C) for(var c in C) A.appendChild(C[c]);
 	return A;
 }
-unsafeWindow.globals = globals;
-unsafeWindow.opts = opts;
+
 function center() {
 	var psize = player.offsetWidth;
 	if(psize > 960) globals.setStyle("marginLeft", Math.round((960 - psize) / 2) - 1);
@@ -383,25 +382,29 @@ function guaranteeExecute(code) {
 }
 
 function contentEval(source) {
-	source = '(' + source + ')();'
+	if(typeof source == "function") source = '(' + source + ')();'
 
 	var script = document.createElement('script');
 	script.setAttribute("type", "application/javascript");
 	script.textContent = source;
 
 	document.body.appendChild(script);
-	document.body.removeChild(script);
 }
+
+contentEval (
+	"opts = " + JSON.stringify(opts) + "; " + 
+	"globals = " + JSON.stringify(globals) + ";";
+);
 
 contentEval(function() {
 	player = document.getElementById("movie_player");
+	document.title = document.title.substring(0, document.title.length - 10);
 
 	var ClientSidePayload = {
 		start : function() {
 			function $(a) { return document.getElementById(a)}
-			console.log($("movie_player").setPlaybackQuality);
 
-			player.setPlaybackQuality(["highres", "hd1080", "hd720", "large", "medium", "small"]['+opts.vq+']);
+			player.setPlaybackQuality(["highres", "hd1080", "hd720", "large", "medium", "small"][opts.vq]);
 
 			if(opts.pauseOnLoad) $("movie_player").pauseVideo();
 
@@ -428,18 +431,19 @@ contentEval(function() {
 				player.addEventListener("onPlaybackQualityChange", "newFmt");
 			}
 			globals.lastHeight = player.offsetHeight;
-			player.focus();			
+			player.focus();
 		},
 		ping : function() {
 			if("setPlaybackQuality" in player)
 			{
-				clearInterval(this.pinger);
 				ClientSidePayload.start();
+			} else {
+				setTimeout(this.ping, 200);
 			}
 		}
 	};
 
-	ClientSidePayload.pinger = setInterval(ClientSidePayload.ping, 200);
+	ClientSidePayload.ping();
 
 });
 
@@ -609,5 +613,5 @@ try {
 script();
 
 } catch(e )  {
-	console.log(e);
+	alert(e);
 }
