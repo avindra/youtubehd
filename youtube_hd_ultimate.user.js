@@ -13,6 +13,7 @@
 // ==/UserScript==
 if(self!=top) return;
 if(!$("watch-headline-title")) location.replace(location.href.replace("#!", "?"));
+var config = unsafeWindow.yt.config_;
 const rev="1.3.0-dev";
 function Params(A) {
 	var obj = {};
@@ -470,7 +471,9 @@ var vars="";
 for(var arg in swfArgs) if(!/^(?:ad|ctb|rec)_/i.test(arg)) vars+="&"+arg+"="+encodeURIComponent(swfArgs[arg]);
 player.setAttribute("flashvars", vars.substring(1).replace(/%20/g, "+"));
 unsafeWindow.console.log(swfArgs);
+
 head = head.insertBefore(new Element("div", {id:"vidtools"}), head.firstChild);
+
 document.addEventListener("keydown", function(E) {
 	if("INPUTEXTAREA".indexOf(E.target.nodeName) >= 0) return;
 	switch (E.keyCode) {
@@ -539,7 +542,7 @@ if(config.IS_HD_AVAILABLE) {
 	if(37 in dls) downloads[37] = "1080p mp4";
 	if(38 in dls) downloads[38] = "4k mp4";
 }
-var trail = "&title=" + encodeURIComponent(document.querySelector("#watch-headline-title > span").title.replace(/"/g, "'"));
+var trail = "&title=" + encodeURIComponent($("eow-title").title.replace(/"/g, "'"));
 function adjust(link) {
 	var r = GM_xmlhttpRequest({
 		url : link.href,
@@ -559,7 +562,7 @@ function adjust(link) {
 var block=new Element("div");
 block.appendChild(document.createTextNode("Download this video as a(n): "));
 var flv=new Element("a", {
-	href : "/get_video?asv&video_id="+swfArgs.video_id+"&t="+swfArgs.t,
+	href : "/get_video?video_id="+swfArgs.video_id+"&t="+swfArgs.watch_ajax_token,
 	textContent : "flv"
 });
 adjust(block.appendChild(flv));
@@ -576,8 +579,8 @@ for(var dl in downloads) {
 	block.appendChild(document.createTextNode(" // "));
 	block.appendChild(temp);
 }
-var commts = $("watch7-discussion");
-commts.parentNode.insertBefore(block, commts);
+var commts = $("watch-header");
+commts.appendChild(block);
 var tail = "&fmt=", highest = "";
 for(var dls in downloads) highest = dls;
 tail += highest;
@@ -586,4 +589,11 @@ config.SHARE_URL += tail;
 config.SHARE_URL_SHORT += tail;
 
 }
-	script();
+
+try { 
+
+script();
+
+} catch(e )  {
+	console.log(e);
+}
