@@ -4,16 +4,16 @@
 // @include       http*://www.youtube.com/watch*
 // @include       http*://youtube.com/watch*
 // @namespace     #aVg
-// @grant       GM_addStyle
-// @grant       GM_getValue
-// @grant       GM_setValue
-// @grant       GM_xmlhttpRequest
+// @grant         GM_addStyle
+// @grant         GM_getValue
+// @grant         GM_setValue
+// @grant         GM_xmlhttpRequest
 // @license       CC-BY-NC-SA http://creativecommons.org/licenses/by-nc-sa/3.0/
-// @version       1.2.9
+// @version       1.3.0-dev
 // ==/UserScript==
 if(self!=top) return;
 if(!$("watch-headline-title")) location.replace(location.href.replace("#!", "?"));
-const rev="1.2.9";
+const rev="1.3.0-dev";
 function Params(A) {
 	var obj = {};
 	var curProp = "", curValue = "";
@@ -306,17 +306,14 @@ optionBox.appendChild(new Element("a", {
 	)
 ));
 var sLinks = {
-	"homepage" : "http://userscripts.org/scripts/show/31864",
-	"development" : "http://code.google.com/p/youtubehd/",
-	"author" : "http://userscripts.org/users/avindra",
+	"homepage" : "http://github.com/avindra/youtubehd",
+	"development" : "http://github.com/avindra/youtubehd",
+	"author" : "http://twitter.com/avindra",
 	"donate" : "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=steveaarti%40gmail%2ecom&lc=US&item_name=Avindra%20Goolcharan&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted",
 	"e-mail" : "mailto:aavindraa@gmail.com",
-	"forums" : "http://userscripts.org/scripts/discuss/31864",
-	"help / wiki" : "http://userscripts.wikia.com/wiki/YouTube_HD_Ultimate",
-	"open bugs + requests" : "http://code.google.com/p/youtubehd/issues/list",
-	"all bugs + requests" : "http://code.google.com/p/youtubehd/issues/list?can=1",
-	"report new bug" : "http://code.google.com/p/youtubehd/issues/entry",
-	"create new request" : "http://code.google.com/p/youtubehd/issues/entry?template=Feature%20Request"
+	"help / wiki" : "https://github.com/avindra/youtubehd/wiki",
+	"issues" : "https://github.com/avindra/youtubehd/issues",
+	"report issue / make request" : "https://github.com/avindra/youtubehd/issues/new"
 };
 for(var link in sLinks)
 	linkbox.appendChild(new Element("a", {
@@ -348,7 +345,7 @@ linkbox.appendChild(new Element("a", {
 	}
 }));
 document.body.appendChild(optionBox);
-var mh = $("yt-masthead-signin");
+var mh = $("yt-masthead-user");
 mh.appendChild(globals.toggler=new Element("button", {
 	style : "margin-left:7px; font-weight:bold; background-color: #0033CC; color: white; -moz-border-radius: 8px;",
 	textContent : "Show YTHD Options",
@@ -589,39 +586,4 @@ config.SHARE_URL += tail;
 config.SHARE_URL_SHORT += tail;
 
 }
-
-function getPurl() {
-	GM_xmlhttpRequest({
-		url : "http://www.youtube.com/watch?v=-AIwkpCH1yA",
-		method : "GET",
-		onload : function(A) {
-			if(A.responseText.match(/x-shockwave-flash"\s+src="([^"]+)/))
-			{
-				purl = RegExp.$1;
-				GM_setValue("purl", purl);
-				script();
-			} else alert("Error retrieving url for the new player!\n\nIf you feel this is a mistake on my part, please let me know: http://userscripts.org/scripts/show/31864");
-		}
-	});
-}
-
-var config = unsafeWindow.yt.config_, purl = unsafeWindow.yt.playerConfig.url;
-if(purl.indexOf("as3")==-1) {
-	purl = GM_getValue("purl");
-	if(purl == null) getPurl();
-	else GM_xmlhttpRequest({
-		url : purl,
-		method : "HEAD",
-		onload : function(A)
-		{
-			if(A.status == 200) script();
-			else getPurl();
-		}
-	});
-} else {
-	try{
-		script();
-	} catch(e) {
-		alert(e);
-	}
-}
+	script();
