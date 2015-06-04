@@ -15,29 +15,7 @@ if(self!=top) return;
 if(!$("watch-headline-title")) location.replace(location.href.replace("#!", "?"));
 var config = unsafeWindow.yt.config_;
 const rev="1.3.0-dev";
-function Params(A) {
-	var obj = {};
-	var curProp = "", curValue = "";
-	for(var i = 0, isProp = true, cur; i < A.length; ++i) {
-		cur = A.charAt(i);
-		if(isProp) {
-			if(cur=="=") {
-				isProp = false;
-				continue;
-			} else curProp += cur;
-		} else {
-			if(cur=="&") {
-				obj[curProp] = decodeURIComponent(curValue).replace(/\+/g, " ");
-				curValue = "";
-				curProp = "";
-				isProp = true;
-				continue;
-			} else curValue += cur;
-		}
-	}
-	if(curProp != "") obj[curProp] = curValue;
-	return obj;
-}
+
 function $(A) {return document.getElementById(A);}
 function update(resp) {
 	GM_xmlhttpRequest({
@@ -58,9 +36,10 @@ if(!last || ((now - last) >= 86400000)) {
 	update(false);
 }
 function script() {
-var player=document.getElementById("movie_player"),
-	swfArgs = new Params(player.getAttribute("flashvars")),
-	optionBox,
+var player=document.getElementById("movie_player");
+var swfArgs = unsafeWindow.ytplayer.config;
+
+var optionBox,
 	globals = {
 		getHeight : function(miniMode) {
 			return miniMode ? 35 : 29;
@@ -118,6 +97,8 @@ function Element(A, B, C, D) {
 	if(C) for(var c in C) A.appendChild(C[c]);
 	return A;
 }
+unsafeWindow.globals = globals;
+unsafeWindow.opts = opts;
 function center() {
 	var psize = player.offsetWidth;
 	if(psize > 960) globals.setStyle("marginLeft", Math.round((960 - psize) / 2) - 1);
@@ -362,6 +343,7 @@ head.addEventListener("click", function() {
 	this.scrollIntoView(true);
 }, false);
 unsafeWindow.stateChanged=function(state) {
+	console.log(state);
 	switch(state) {
 	case 3 :
 	if(!globals.init) {
@@ -400,47 +382,72 @@ function guaranteeExecute(code) {
 	location.href = "javascript:setTimeout(function() {" + code + "}, 10); void(0);";
 }
 
-unsafeWindow.onYouTubePlayerReady=function(A) {
-	console.log("READY FREDDY");
-	guaranteeExecute('player = document.getElementById("movie_player");');
-	guaranteeExecute('player.setPlaybackQuality(["highres", "hd1080", "hd720", "large", "medium", "small"]['+opts.vq+'])');
+function contentEval(source) {
+	source = '(' + source + ')();'
 
-	console.log($("movie_player").setPlaybackQuality);
+	var script = document.createElement('script');
+	script.setAttribute("type", "application/javascript");
+	script.textContent = source;
 
-	var el = $("quicklist");
-	if(el) {
-		if(opts.qlKill) el.style.display = "none";
-		else el.setAttribute("data-autohide-mode", "on");
-	}
-	if(opts.fit) fitToWindow();
-	if(opts.min) {
-		fitToWindow();
-		globals.setHeight(globals.getHeight(true));
-	} else if(opts.fit) unsafeWindow.onresize = fitToWindow;
-	if(opts.useVol && opts.vol.match(/(\d+)/)) player.setVolume(Number(RegExp.$1));
-	unsafeWindow.sizeClicked = globals.handleSize;
-	player.addEventListener("onStateChange", "stateChanged");
-	player.addEventListener("SIZE_CLICKED", "sizeClicked");
-	player.addEventListener("NEXT_CLICKED", "yt.www.watch.player.onPlayerNextClicked");
-	player.addEventListener("NEXT_SELECTED", "yt.www.watch.player.onPlayerNextSelected");
-	if(opts.snapBack) {
-		unsafeWindow.newFmt=function(fmt) {
-			if(player.getPlaybackQuality()!=fmt) globals.handleSize(/hd(?:72|108)0|large/.test(fmt));
-		};
-		player.addEventListener("onPlaybackQualityChange", "newFmt");
-	}
-	globals.lastHeight = player.offsetHeight;
-	player.focus();
-};
+	document.body.appendChild(script);
+	document.body.removeChild(script);
+}
+
+contentEval(function() {
+	player = document.getElementById("movie_player");
+
+	var ClientSidePayload = {
+		start : function() {
+			function $(a) { return document.getElementById(a)}
+			console.log($("movie_player").setPlaybackQuality);
+
+			player.setPlaybackQuality(["highres", "hd1080", "hd720", "large", "medium", "small"]['+opts.vq+']);
+
+			if(opts.pauseOnLoad) $("movie_player").pauseVideo();
+
+			var el = $("quicklist");
+			if(el) {
+				if(opts.qlKill) el.style.display = "none";
+				else el.setAttribute("data-autohide-mode", "on");
+			}
+			if(opts.fit) fitToWindow();
+			if(opts.min) {
+				fitToWindow();
+				globals.setHeight(globals.getHeight(true));
+			} else if(opts.fit) window.onresize = fitToWindow;
+			if(opts.useVol && opts.vol.match(/(\d+)/)) player.setVolume(Number(RegExp.$1));
+			window.sizeClicked = globals.handleSize;
+			player.addEventListener("onStateChange", "stateChanged");
+			player.addEventListener("SIZE_CLICKED", "sizeClicked");
+			player.addEventListener("NEXT_CLICKED", "yt.www.watch.player.onPlayerNextClicked");
+			player.addEventListener("NEXT_SELECTED", "yt.www.watch.player.onPlayerNextSelected");
+			if(opts.snapBack) {
+				window.newFmt=function(fmt) {
+					if(player.getPlaybackQuality()!=fmt) globals.handleSize(/hd(?:72|108)0|large/.test(fmt));
+				};
+				player.addEventListener("onPlaybackQualityChange", "newFmt");
+			}
+			globals.lastHeight = player.offsetHeight;
+			player.focus();			
+		},
+		ping : function() {
+			if("setPlaybackQuality" in player)
+			{
+				clearInterval(this.pinger);
+				ClientSidePayload.start();
+			}
+		}
+	};
+
+	ClientSidePayload.pinger = setInterval(ClientSidePayload.ping, 200);
+
+});
+
 if(opts.hidenotes) swfArgs.iv_load_policy="3";
 if(config.LIST_AUTO_PLAY_ON) swfArgs.playnext = "1";
 if(!opts.autoplay) {
 	if(opts.autobuffer)
-		setTimeout(function() {
-			try { 
-			$("movie_player").pauseVideo();
-		} catch(e) {alert(e)}
-		}, 300);
+		opts.pauseOnLoad = true;
 	else
 		swfArgs.autoplay="0";
 }
